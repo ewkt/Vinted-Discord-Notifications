@@ -1,0 +1,12 @@
+[
+  {
+    "channelId": "xxxx",
+    "channelName": "test1",
+    "url": "https://www.vinted.fr/catalog?brand_ids[]=53"
+  },
+  {
+    "channelId": "xxxx",
+    "channelName": "test2",
+    "url": "https://www.vinted.fr/catalog?brand_ids[]=12"  
+  }
+]

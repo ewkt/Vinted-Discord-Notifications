@@ -1,0 +1,14 @@
+{
+  "name": "vinted.js",
+  "author": "ewkt",
+  "version": "1.0.6",
+  "description": "vinted scrapper",
+  "main": "main.js",
+  "type": "module",
+  "dependencies": {
+    "better-sqlite3": "^8.0.1",
+    "discord.js": "^13.1.0",
+    "node-fetch": "^3.2.10",
+    "user-agents": "^1.0.1133"
+  }
+}
