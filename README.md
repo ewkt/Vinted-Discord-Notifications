@@ -9,6 +9,7 @@ Fonctionalités:
 - Ajout d'autant de recherches que nécéssaire avec choix du salon vers lequel les nouveaux articles sont envoyés
 - Possibilité de customiser la fréquence de recherche (pour minimiser les délais)
 - Possibilité de bloquer des mots spécifiques dans le titre
+- Possibilité d'intégrer des proxy (dans proxies.txt) pour augmenter le nombre de requetes faites par minute
 
 
 Pré-requis:
