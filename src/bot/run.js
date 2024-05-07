@@ -56,9 +56,8 @@ const run = async (client, db, processedArticleIds, mySearches, config, proxies)
 
 //launch a seperate interval for each search
     mySearches.map((channel, index) => {
-        const proxy = proxies[index % proxies.length].trim() || null;
-        const agent = new HttpsProxyAgent(proxy);
-
+        const proxy = proxies.length > 0 ? proxies[index % proxies.length].trim() : null;
+        const agent = proxy ? new HttpsProxyAgent(proxy) : null;
         runInterval(client, db, processedArticleIds, channel, cookieObj, agent);
     });
 

@@ -21,7 +21,7 @@ const vintedSearch = (params = {},cookie, agent) => {
         "DNT": "1",
         "Upgrade-Insecure-Requests": "1",
       },
-      agent: proxy,
+      agent: agent,
     })
     .then((res) => {
       controller.abort();

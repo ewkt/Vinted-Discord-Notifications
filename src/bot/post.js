@@ -16,6 +16,8 @@ const components = [
 
 //format the timestamp
 async function cleanTime(time) {
+  let delay;
+  
   if (time < 1000) {
     delay = `${time.toFixed(0)}ms`;
   }  else if (time < 60000) {
