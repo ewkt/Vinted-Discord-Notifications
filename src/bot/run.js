@@ -1,38 +1,67 @@
-import fs from 'fs';
-
 import vintedSearch from "../api/search.js";
 import selectNewArticles from "./filter.js";
 import postArticles from "./post.js";
 import {insertArticles} from "../db/db.js";
+import fetchCookie from "../api/auth.js";
 
-const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
-
-const processChannels = async (cookie, client, db, processedArticleIds, INTERVAL_TIME) => {
+const runSearch = async (client, db, processedArticleIds, channel, cookieObj) => {
     try {
         process.stdout.write('.');
-        //for each channel (vinted search), look for new articles
-        const promises = mySearches.map(async (channel) => {
-            const url = new URL(channel.url);
-            const urlParams = Object.fromEntries(new URLSearchParams(url.search));
-            const channelToSend = client.channels.cache.get(channel.channelId);
-            const articles = await vintedSearch(urlParams, cookie) ?? { items: [] };
-            const newArticles = await selectNewArticles(articles, processedArticleIds);
+        const url = new URL(channel.url);
+        const channelToSend = client.channels.cache.get(channel.channelId);
+        const articles = await vintedSearch(url.search, url.host, cookieObj.value, 10) ?? { items: [] };
+        const newArticles = await selectNewArticles(articles, processedArticleIds, channel.filterWords);
 
-            //if new articles are found, post them and insert them into the database
-            if (newArticles && newArticles.length > 0) {
-                process.stdout.write('\n' + channel.channelName + ' => ' + newArticles.length + ' new articles found.' + '\nSearching for new articles');
-                newArticles.forEach(article => { processedArticleIds.add(article.id); });
-                await postArticles({ newArticles, channelToSend });
-                await insertArticles(newArticles, channel.channelName, db);
-            }
-        });
-        await Promise.all(promises);
+//if new articles are found, post them and insert them into the database
+        if (newArticles && newArticles.length > 0) {
+            process.stdout.write('\n' + channel.channelName + ' => +' + newArticles.length);
+            newArticles.forEach(article => { processedArticleIds.add(`${article.id}_${article.photo.high_resolution.timestamp}`); });
+            await postArticles({ newArticles, channelToSend });
+            await insertArticles(newArticles, channel.channelName, db);
+        }
     } catch (err) {
-        console.error('Error posting articles:', err);
-    } finally {
-        //wait for the interval time and then search for new articles again
-        setTimeout(() => processChannels(cookie, client, db, processedArticleIds, INTERVAL_TIME), INTERVAL_TIME);
+            console.error('\n Error posting articles:', err);
+        }
+};
+
+
+const runInterval = async (client, db, processedArticleIds, channel, cookieObj) => {
+   
+//run the search and set a timeout to run it again   
+    try {
+        await runSearch(client, db, processedArticleIds, channel, cookieObj);
+        setTimeout(() => runInterval(client, db, processedArticleIds, channel, cookieObj), channel.frequency);
+    } catch (err) {
+
+//if the cookie is invalid, wait for a minute, fetch a new one and restart the interval        
+        if (err.status === 401) {
+            setTimeout(async () => {
+                cookieObj.value = await fetchCookie();
+                console.log("\n 401 => New cookie fetched.\n");
+                runInterval(client, db, processedArticleIds, channel, cookieObj);
+            }, 60000);
+        }
     }
 };
 
-export default processChannels;
+
+//define the order of steps to run
+const run = async (client, db, processedArticleIds, mySearches, config) => {
+    let cookieObj = {};
+
+//initialise cookie
+    cookieObj.value = await fetchCookie();
+
+//launch a seperate interval for each search
+    mySearches.forEach((channel) => {
+        runInterval(client, db, processedArticleIds, channel, cookieObj);
+    });
+
+//fetch a new cookie every hour    
+    setInterval(async () => {
+        cookieObj.value = await fetchCookie();
+        console.log("\nNew cookie fetched.\n");
+    }, config.INTERVAL_TIME);
+};
+
+export default run;

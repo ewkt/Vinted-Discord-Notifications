@@ -2,10 +2,7 @@ import fetch from "node-fetch";
 import UserAgent from "user-agents";
 
 //prepares the url for the fetch request
-function parseVintedURL(urlParams,per_page=10) {
-  const params = Object.entries(urlParams)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
+function parseVintedURL(params,per_page=10) {
   return `https://www.vinted.fr/api/v2/catalog/items?${params}&order=newest_first&page=1&per_page=${per_page}`;
 }
 
