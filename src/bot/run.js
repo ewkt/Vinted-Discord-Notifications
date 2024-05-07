@@ -4,12 +4,14 @@ import postArticles from "./post.js";
 import {insertArticles} from "../db/db.js";
 import fetchCookie from "../api/auth.js";
 
-const runSearch = async (client, db, processedArticleIds, channel, cookieObj) => {
+import { HttpsProxyAgent } from 'https-proxy-agent';
+
+const runSearch = async (client, db, processedArticleIds, channel, cookieObj, agent) => {
     try {
         process.stdout.write('.');
         const url = new URL(channel.url);
         const channelToSend = client.channels.cache.get(channel.channelId);
-        const articles = await vintedSearch(url.search, url.host, cookieObj.value, 10) ?? { items: [] };
+        const articles = await vintedSearch(url.search, cookieObj.value, agent) ?? { items: [] };
         const newArticles = await selectNewArticles(articles, processedArticleIds, channel.filterWords);
 
 //if new articles are found, post them and insert them into the database
@@ -25,12 +27,12 @@ const runSearch = async (client, db, processedArticleIds, channel, cookieObj) =>
 };
 
 
-const runInterval = async (client, db, processedArticleIds, channel, cookieObj) => {
+const runInterval = async (client, db, processedArticleIds, channel, cookieObj, agent) => {
    
 //run the search and set a timeout to run it again   
     try {
-        await runSearch(client, db, processedArticleIds, channel, cookieObj);
-        setTimeout(() => runInterval(client, db, processedArticleIds, channel, cookieObj), channel.frequency);
+        await runSearch(client, db, processedArticleIds, channel, cookieObj, agent);
+        setTimeout(() => runInterval(client, db, processedArticleIds, channel, cookieObj, agent), channel.frequency);
     } catch (err) {
 
 //if the cookie is invalid, wait for a minute, fetch a new one and restart the interval        
@@ -38,7 +40,7 @@ const runInterval = async (client, db, processedArticleIds, channel, cookieObj) 
             setTimeout(async () => {
                 cookieObj.value = await fetchCookie();
                 console.log("\n 401 => New cookie fetched.\n");
-                runInterval(client, db, processedArticleIds, channel, cookieObj);
+                runInterval(client, db, processedArticleIds, channel, cookieObj, agent);
             }, 60000);
         }
     }
@@ -46,15 +48,18 @@ const runInterval = async (client, db, processedArticleIds, channel, cookieObj) 
 
 
 //define the order of steps to run
-const run = async (client, db, processedArticleIds, mySearches, config) => {
+const run = async (client, db, processedArticleIds, mySearches, config, proxies) => {
     let cookieObj = {};
 
 //initialise cookie
     cookieObj.value = await fetchCookie();
 
 //launch a seperate interval for each search
-    mySearches.forEach((channel) => {
-        runInterval(client, db, processedArticleIds, channel, cookieObj);
+    mySearches.map((channel, index) => {
+        const proxy = proxies[index % proxies.length].trim() || null;
+        const agent = new HttpsProxyAgent(proxy);
+
+        runInterval(client, db, processedArticleIds, channel, cookieObj, agent);
     });
 
 //fetch a new cookie every hour    

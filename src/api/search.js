@@ -8,7 +8,7 @@ function parseVintedURL(params,per_page=10) {
 
 
 //send the authenticated request
-const vintedSearch = (params = {},cookie) => {
+const vintedSearch = (params = {},cookie, agent) => {
   return new Promise(async (resolve, reject) => {
     const controller = new AbortController();
     fetch(parseVintedURL(params), {
@@ -21,6 +21,7 @@ const vintedSearch = (params = {},cookie) => {
         "DNT": "1",
         "Upgrade-Insecure-Requests": "1",
       },
+      agent: proxy,
     })
     .then((res) => {
       controller.abort();
