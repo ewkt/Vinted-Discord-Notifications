@@ -1,4 +1,4 @@
-###nouvelle fonctionalité autobuy!
+### nouvelle fonctionalité autobuy!
 
 configuration:
   il faut récupérer des infos en capturant le trafic lors d'un login sur vinted.fr
