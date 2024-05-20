@@ -4,7 +4,7 @@ configuration:
   il faut récupérer des infos en capturant le trafic lors d'un login sur vinted.fr
   - trouver 'access_token' et 'refresh_token' dans le "POST" à 'https://www.vinted.fr/oauth/token'.
   - trouver le cookie 'X-CSRF-Token' dans les headers d'une requete comme 'checkout'.
-  - mettre a uour config.json avec la latitue et la longitude de son addresse personelle (pour le choix automatique de point relais)
+  - mettre a jour config.json avec la latitude et la longitude de son addresse personelle (pour le choix automatique de point relais)
 
 Placer ces informations dans le fichier tokens.json comme indiqué dans la template
 
