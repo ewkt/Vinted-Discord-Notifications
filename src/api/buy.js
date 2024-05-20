@@ -17,13 +17,13 @@ export async function getTransactionId(itemId, sellerId, access_token, xcsrf_tok
     }
   }
 
-export async function payItem(transactionId, access_token, xcsrf_token){
+export async function payItem(transactionId, access_token, xcsrf_token, latitude, longitude){
     try {
         console.log('getting checksum')
         const article = await authorizedRequest("PUT", `https://www.vinted.fr/api/v2/transactions/${transactionId}/checkout`, undefined, access_token, xcsrf_token);
 
         console.log('selecting shipping point')
-        const shipts = await authorizedRequest("GET", `https://www.vinted.fr/api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=FR&latitude=48.9194618&longitude=2.1881309&should_label_nearest_points=true`, undefined, access_token, xcsrf_token);
+        const shipts = await authorizedRequest("GET", `https://www.vinted.fr/api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=FR&latitude=${latitude}&longitude=${longitude}&should_label_nearest_points=true`, undefined, access_token, xcsrf_token);
         
         //select closest shipping point
         const point_id = 0;
