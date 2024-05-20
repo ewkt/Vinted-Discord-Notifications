@@ -1,13 +1,13 @@
-nouvelle fonctionalité autobuy!
+###nouvelle fonctionalité autobuy!
 
 configuration:
   il faut récupérer des infos en capturant le trafic lors d'un login sur vinted.fr
-  - trouver 'access_token' et 'refresh_token' dans le "POST" à 'https://www.vinted.fr/oauth/token'
-  - trouver le cookie 'X-CSRF-Token' dans les headers d'une requete comme 'checkout'
-  placer ces informations dans le fichier tokens.json comme indiqué dans la template
+  - trouver 'access_token' et 'refresh_token' dans le "POST" à 'https://www.vinted.fr/oauth/token'.
+  - trouver le cookie 'X-CSRF-Token' dans les headers d'une requete comme 'checkout'.
+  Placer ces informations dans le fichier tokens.json comme indiqué dans la template
 
-Cette fonctionalité est encore en cours de développement, pour l'instant pas de fonctionalités après l'achat
-Pas non plus de suivi de l'etat de l'achat dans dsicord, il faudra consulter les logs sur le terminal pour débeuguer
+Cette fonctionalité est encore en cours de développement, pour l'instant pas de fonctionalités après l'achat.
+Pas non plus de suivi de l'etat de l'achat dans dsicord, il faudra consulter les logs sur le terminal pour débeuguer.
 N'hesitez pas a ouvrir un nouveau 'issue' pour tout problème rencontré ou si vous avez des recommendations.
 Il semblerait que le token n'est pas rafraichi malgrés la requête à l'url concerné => si il y a une erreur d'authentification il faut refaire la manip pour regenérer des tokens.
 
