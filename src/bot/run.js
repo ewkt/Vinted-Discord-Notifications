@@ -1,8 +1,8 @@
-import vintedSearch from "../api/search.js";
-import selectNewArticles from "./filter.js";
-import postArticles from "./post.js";
+import {vintedSearch} from "../api/search.js";
+import {selectNewArticles} from "./filter.js";
+import {postArticles} from "./post.js";
 import {insertArticles} from "../db/db.js";
-import fetchCookie from "../api/auth.js";
+import {fetchCookie} from "../api/auth.js";
 
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
@@ -48,7 +48,7 @@ const runInterval = async (client, db, processedArticleIds, channel, cookieObj, 
 
 
 //define the order of steps to run
-const run = async (client, db, processedArticleIds, mySearches, config, proxies) => {
+export const run = async (client, db, processedArticleIds, mySearches, config, proxies) => {
     let cookieObj = {};
 
 //initialise cookie
@@ -67,5 +67,3 @@ const run = async (client, db, processedArticleIds, mySearches, config, proxies)
         console.log("\nNew cookie fetched.\n");
     }, config.INTERVAL_TIME);
 };
-
-export default run;

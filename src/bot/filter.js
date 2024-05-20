@@ -1,5 +1,5 @@
 //chooses only articles not already seen & posted in the last 10min
-const selectNewArticles = (articles, processedArticleIds, filterWords = []) => {
+export const selectNewArticles = (articles, processedArticleIds, filterWords = []) => {
   const items = Array.isArray(articles.items) ? articles.items : [];
   const filteredArticles = items.filter(({ photo, id, title }) => 
     photo && 
@@ -9,5 +9,3 @@ const selectNewArticles = (articles, processedArticleIds, filterWords = []) => {
   );
   return filteredArticles;
 };
-
-export default selectNewArticles;

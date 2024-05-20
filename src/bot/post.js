@@ -11,6 +11,10 @@ const components = [
       .setLabel("Message")
       .setEmoji("🪐")
       .setStyle("LINK"),
+      new Discord.MessageButton()
+      .setCustomId("autobuy")
+      .setLabel("Autobuy")
+      .setStyle("SUCCESS"),
   ]),
 ];
 
@@ -30,7 +34,7 @@ async function cleanTime(time) {
   return delay;
 }
 
-async function postArticles({ newArticles, channelToSend }) {
+export async function postArticles({ newArticles, channelToSend }) {
 
 //simultanously send the messages
   const messages = newArticles.slice(0, 10).map((item) => {
@@ -54,6 +58,7 @@ async function postArticles({ newArticles, channelToSend }) {
             },
           ],
           image: { url: item.photo?.url },
+          footer: {text: item.user.id+"-"+item.id},
           timestamp,
           color: "#09b1ba",
         },
@@ -63,5 +68,3 @@ async function postArticles({ newArticles, channelToSend }) {
   });
   await Promise.all(messages);
 }
-
-export default postArticles;

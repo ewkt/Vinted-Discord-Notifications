@@ -8,7 +8,7 @@ function parseVintedURL(params,per_page=10) {
 
 
 //send the authenticated request
-const vintedSearch = (params = {},cookie, agent) => {
+export const vintedSearch = (params = {},cookie, agent) => {
   return new Promise(async (resolve, reject) => {
     const controller = new AbortController();
     fetch(parseVintedURL(params), {
@@ -40,5 +40,3 @@ const vintedSearch = (params = {},cookie, agent) => {
     });
 });
 };
-
-export default vintedSearch;
