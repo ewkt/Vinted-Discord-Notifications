@@ -35,6 +35,6 @@ client.on('interactionCreate', async (interaction) => {
     await checkAndRefreshTokens();
 
     if (interaction.customId === 'autobuy') {
-        autobuy(interaction, itemId, sellerId, tokens.access_token, tokens.xcsrf_token);
+        autobuy(interaction, itemId, sellerId, tokens.access_token, tokens.xcsrf_token, config.latitude, config.longitude);
     }
 });
