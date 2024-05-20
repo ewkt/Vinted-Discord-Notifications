@@ -87,6 +87,15 @@ b) Il faut choisir quelles recherches utiliser dans `channels.json`:
 ]
 ```
 
+c) Il faut ajouter les tokens de session à `tokens.json` :
+```
+{
+  "access_token": "xxxxxxxx",
+  "refresh_token": "xxxxxxx",
+  "xcsrf_token": "xxxxxx"
+}
+```
+
 
 Etape 4: lancer le bot
 -------
