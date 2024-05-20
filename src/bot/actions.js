@@ -1,10 +1,10 @@
 import { getTransactionId, payItem } from "../api/buy.js";
 
-export async function autobuy(interaction, itemId, sellerId, access_token, xcsrf_token){
+export async function autobuy(interaction, itemId, sellerId, access_token, xcsrf_token, latitude, longitude){
     try {
         const transactionId = await getTransactionId(itemId, sellerId, access_token, xcsrf_token);
         if (transactionId) {
-            await payItem(transactionId, access_token, xcsrf_token);
+            await payItem(transactionId, access_token, xcsrf_token, latitude, longitude);
     }} catch (error) {
         console.error(error);
         interaction.reply('error');
