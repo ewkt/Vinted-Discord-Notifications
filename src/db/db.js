@@ -13,7 +13,7 @@ function init(db, processedArticleIds) {
         timestamp INTEGER,
         sold BOOLEAN
     )`);
-    const dbArticles = db.prepare('SELECT * FROM articles').all();
+    const dbArticles = db.prepare("SELECT * FROM articles WHERE date > date('now', '-1 day')").all();
     dbArticles.forEach(article => { processedArticleIds.add(`${article.id}_${article.timestamp}`); });
 }
 
