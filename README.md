@@ -1,29 +1,7 @@
-### nouvelle fonctionalité autobuy!
-
-configuration:
-  il faut récupérer des infos en capturant le trafic lors d'un login sur vinted.fr
-  - trouver 'access_token' et 'refresh_token' dans le "POST" à 'https://www.vinted.fr/oauth/token'.
-  - trouver le cookie 'X-CSRF-Token' dans les headers d'une requete comme 'checkout'.
-  - mettre a jour config.json avec la latitude et la longitude de son addresse personelle (pour le choix automatique de point relais)
-
-Placer ces informations dans le fichier tokens.json comme indiqué dans la template
-
-Cette fonctionalité est encore en cours de développement, pour l'instant pas de fonctionalités après l'achat.
-Pas non plus de suivi de l'etat de l'achat dans discord, il faudra consulter les logs sur le terminal pour débeuguer.
-N'hesitez pas a ouvrir un nouveau 'issue' pour tout problème rencontré ou si vous avez des recommendations.
-
-Il semblerait que le token n'est pas rafraichi malgrés la requête à l'url concerné => si il y a une erreur d'authentification il faut refaire la manip pour regenérer des tokens.
-
-TODO:
-- Ajouter des slash commands pour rendre la configuration plus facile au démarrage (interface dans discord)
-- Faire du post-processing après achat (envoyer les articles acheté en DM?)
-
-
-
-
 # Vinted Bot Discord
 
 Ce bot permet d'envoyer les nouveautés de plusieurs recherche vinted à la fois sur un serveur discord. Il y a 0-délais car la recherche se fait via l'api vinted
+Il stocke par ailleurs dans une base de données toutes les annonces trouvées.
 
 **Attention l'API vinted bloque (rate-limit) au dessus de 1 requête par seconde</font>**
 
@@ -63,12 +41,13 @@ a) Il faut ajouter le token du bot discord dans `config.json` :
   "longitude":""
 }
 ```
-
+token: représente le token généré par discord pour le bot
 INTERVAL_TIME: représente la fréquence à laquelle le bot va rafraichir son cookie en millisecondes (entre 1h et 2h est recommandé)
+latitude & longitude: réprsente la position géographique de l'utilisateur afin de pouvoir automatiquement selectionner un point relais proche.
 
 b) Il faut choisir quelles recherches utiliser dans `channels.json`:
   - channelId est le dernier nombre dans l'url du channel discord quand il est affiché à l'écran
-(https://discord.com/channels/123456789000000000/---123456789012345678---)
+(https://discord.com/channels/123456789000000000/--->123456789012345678<---)
   - channelName permet de differencier les recherches dans les log
   - url est l'url de la recherche vinted (il suffit de copier-coller l'url de la recherche voulue depuis vinted)
   - frequency est le délais en millisecondes entre deux recherches sur cet url
@@ -105,4 +84,17 @@ node main.js
 ```
 
 Pour arreter le bot il suffit de Ctrl+C sur le terminal où le bot est actif.
+
+
+### nouvelle fonctionalité autobuy!
+
+Cette fonctionalité est encore en cours de développement, pour l'instant pas de fonctionalités après l'achat.
+Pas non plus de suivi de l'etat de l'achat dans discord, il faudra consulter les logs sur le terminal pour débeuguer.
+N'hesitez pas a ouvrir un nouveau 'issue' pour tout problème rencontré ou si vous avez des recommendations.
+
+Il semblerait que le token ne soit pas rafraichi malgré la requête à l'url concerné => si il y a une erreur d'authentification il faut refaire la manip pour regenérer des tokens.
+
+TODO:
+- Ajouter des slash commands pour rendre la configuration plus facile au démarrage (interface dans discord)
+- Faire du post-processing après achat (envoyer les articles acheté en DM?)
 
