@@ -87,6 +87,7 @@ c) If you want to use autobuy you will also need to add your session tokens to `
   "refresh_token": "xxxxxxx"
 }
 ```
+(you can follow [this video tutorial](https://dai.ly/k8WySk1UDMB69UBu31Y))
 
 
 Step 4: launch
