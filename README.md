@@ -1,38 +1,40 @@
-# Vinted Bot Discord
+# Vinted Discord Notifications
 
-Ce bot permet d'envoyer les nouveautés de plusieurs recherche vinted à la fois sur un serveur discord. Il y a 0-délais car la recherche se fait via l'api vinted
-Il stocke par ailleurs dans une base de données toutes les annonces trouvées.
+This project allows you to host your own bot on your discord server, and recieve notifications for your favorite vinted searches.
+It's a feature that is truly missed in the vinted app, you will never miss a good deal again!
+And with a few more set-up steps, you will even be able to use the 'autobuy' button to buy a listing straight from the discord app!
 
-**Attention l'API vinted bloque (rate-limit) au dessus de 1 requête par seconde</font>**
+**WARNING Vinted blocks requests when they are too frequent, try not to go over 1 request per second</font>**
+(for eaxmple if you have 10 different searches, you should probably configre them to be refreshed every 10 seconds to avoid having issues with vinted)
 
-Fonctionalités:
+Functionalities:
 ----------
-- Ajout d'autant de recherches que nécéssaire avec choix du salon vers lequel les nouveaux articles sont envoyés
-- Possibilité de customiser la fréquence de recherche (pour minimiser les délais)
-- Possibilité de bloquer des mots spécifiques dans le titre
+- Ability to have as many searches as you wish in as little or as many discord channels as wanted (it's possible to have multiple searches in a single channel)
+- Each search has its own schedule! you just have to configure how frequently it needs to be refreshed
+- Ability to block certain words from the title of your search results, to make your searches even more precise!
 
 
-Pré-requis:
+Prerequisites:
 ----------
 
-- Avoir un environement pour executer un programme en Node.js (npm et node a minima)
-- Avoir un serveur discord
-- Avoir créé un bot, avoir son token et l'avoir invité dans son serveur
+- Need to be able to run JS code, preferably on a machine that is up 24/7 ( I use npm and node on a small raspberry pi, other options could be renting a VPS, or using services like Heroku)
+- Have a discord server you can invite the bot on
 
 
-Etape 1: telecharger le code complet et ouvrir un terminal dans le projet
+Step 1: Download the bot (git clone or download as zip)
 -------
 
-Etape 2: installer les dépendances
+Step 2: Install dependencies
 -------
 ```
+cd /path/to/the/project
 npm i
 ```
 
-Etape 3: configurer le bot
+Step 3: configure the bot
 -------
 
-a) Il faut ajouter le token du bot discord dans `config.json` :
+a) Fill in `config.json` :
 ```
 {
   "token": "xxxxxxxx"
@@ -41,17 +43,17 @@ a) Il faut ajouter le token du bot discord dans `config.json` :
   "longitude":""
 }
 ```
-token: représente le token généré par discord pour le bot
-INTERVAL_TIME: représente la fréquence à laquelle le bot va rafraichir son cookie en millisecondes (entre 1h et 2h est recommandé)
-latitude & longitude: réprsente la position géographique de l'utilisateur afin de pouvoir automatiquement selectionner un point relais proche.
+token: this is the token from when you created your bot on the discord developer portal.
+INTERVAL_TIME: this is how long the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
+latitude & longitude: configure these if you want to use the autobuy functionality, set them to your position so that your pickup point gets chosen automatically.
 
-b) Il faut choisir quelles recherches utiliser dans `channels.json`:
-  - channelId est le dernier nombre dans l'url du channel discord quand il est affiché à l'écran
+b) Choose your searches in `channels.json`:
+  - channelId: is the id of the discord channel that you want to get the search results on.
 (https://discord.com/channels/123456789000000000/--->123456789012345678<---)
-  - channelName permet de differencier les recherches dans les log
-  - url est l'url de la recherche vinted (il suffit de copier-coller l'url de la recherche voulue depuis vinted)
-  - frequency est le délais en millisecondes entre deux recherches sur cet url
-  - filterWords est une liste de mots (entre guillemets séparés par des virgules) qui permettent d'exclure les annonces qui ont ces mots dans leur titre.
+  - channelName: is a way of identifying which searches are producing results in the app logs
+  - url: is the url of the vinted search you want to have notifications for, just copy and paste it from vinted in your browser!
+  - frequency: this is how fast you want the search to look for new items, in milliseconds (remember to not exceed 1 request per second)
+  - filterWords: is a list of words that you want to exclude from the title of your items 
 
 ```
 [
@@ -63,12 +65,18 @@ b) Il faut choisir quelles recherches utiliser dans `channels.json`:
     "filterWords": ["nike","puma"]
   },
   {
-    ...
+    "channelId": "123456789012345622",
+    "channelName": "test2",
+    "url": "https://www.vinted.fr/catalog?brand_ids[]=50",
+    "frequency": 100000
+  },
+  {
+....
   }
 ]
 ```
 
-c) Il faut ajouter les tokens de session à `tokens.json` :
+c) If you want to use autobuy you will also need to add your session tokens to `tokens.json` :
 ```
 {
   "access_token": "xxxxxxxx",
@@ -77,24 +85,11 @@ c) Il faut ajouter les tokens de session à `tokens.json` :
 ```
 
 
-Etape 4: lancer le bot
+Step 4: launch
 -------
 ```
 node main.js
 ```
 
-Pour arreter le bot il suffit de Ctrl+C sur le terminal où le bot est actif.
 
-
-### nouvelle fonctionalité autobuy!
-
-Cette fonctionalité est encore en cours de développement, pour l'instant pas de fonctionalités après l'achat.
-Pas non plus de suivi de l'etat de l'achat dans discord, il faudra consulter les logs sur le terminal pour débeuguer.
-N'hesitez pas a ouvrir un nouveau 'issue' pour tout problème rencontré ou si vous avez des recommendations.
-
-Il semblerait que le token ne soit pas rafraichi malgré la requête à l'url concerné => si il y a une erreur d'authentification il faut refaire la manip pour regenérer des tokens.
-
-TODO:
-- Ajouter des slash commands pour rendre la configuration plus facile au démarrage (interface dans discord)
-- Faire du post-processing après achat (envoyer les articles acheté en DM?)
-
+Don't hesitate to contact me on discord (@thewwk) or open an issue here if you have any concerns or requests!
