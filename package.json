@@ -1,17 +1,15 @@
 {
-  "name": "vinted.js",
-  "author": "ewkt",
-  "version": "1.0.6",
-  "description": "vinted scrapper",
-  "main": "main.js",
-  "type": "module",
-  "dependencies": {
-    "better-sqlite3": "^8.0.1",
-    "discord.js": "^13.1.0",
-    "fs": "^0.0.1-security",
-    "https": "^1.0.0",
-    "https-proxy-agent": "^7.0.4",
-    "node-fetch": "^3.2.10",
-    "user-agents": "^1.0.1133"
-  }
+    "name": "vinted.js",
+    "author": "@ewkt",
+    "version": "1.1.0",
+    "description": "notifications for vinted",
+    "main": "main.js",
+    "type": "module",
+    "dependencies": {
+        "discord.js": "^13.1.0",
+        "fs": "^0.0.1-security",
+        "https": "^1.0.0",
+        "node-fetch": "^3.2.10",
+        "user-agents": "^1.0.1133"
+    }
 }

@@ -1,15 +1,15 @@
 [
-  {
-    "channelId": "xxxx",
-    "channelName": "test1",
-    "url": "https://www.vinted.fr/catalog?brand_ids[]=53",
-    "frequency": 10000
-  },
-  {
-    "channelId": "xxxx",
-    "channelName": "test2",
-    "url": "https://www.vinted.fr/catalog?brand_ids[]=12",
-    "frequency": 60000,
-    "filterWords": ["test", "test2"]
-  }
+    {
+        "channelId": "xxxx",
+        "channelName": "test1",
+        "url": "https://www.vinted.fr/catalog?brand_ids[]=53",
+        "frequency": 10000
+    },
+    {
+        "channelId": "xxxx",
+        "channelName": "test2",
+        "url": "https://www.vinted.fr/catalog?brand_ids[]=12",
+        "frequency": 60000,
+        "filterWords": ["test", "test2"]
+    }
 ]

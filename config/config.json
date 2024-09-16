@@ -1,6 +1,6 @@
 {
-  "bot_token": "xxxx",
-  "INTERVAL_TIME": "30000",
-  "latitude": "3.299900",
-  "longitude": "42.22299"
+    "bot_token": "xxxx",
+    "INTERVAL_TIME": "30000",
+    "latitude": "3.299900",
+    "longitude": "42.22299"
 }
