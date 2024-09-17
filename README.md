@@ -25,8 +25,19 @@ Prerequisites:
 - Have a discord server you can invite the bot on
 
 
-Step 1: Download the bot (git clone or download as zip)
+Step 0: Download the code (git clone or download as zip)
 -------
+
+Step 1: Create and invite the bot to your server
+-------
+
+- Go to the [Discord Developer Portal](https://discord.com/developers/applications).
+- Click on "New Application" and give your bot a name.
+- Go to the "Bot" tab and click on "Add Bot".
+- Copy the "Token" to put in the configuration file in the next steps.
+- Give intent permissions to the bot by going to the "Bot" tab and enabling the "Presence Intent", "Server Members Intent" and "Content Message Intent".
+- Invite the bot with admin permissions to your server by going to the "OAuth2" tab and selecting the "bot" and "application.commands" scope and the "Administrator" permission.
+- Copy the generated URL and paste it into your browser to invite the bot to your server. (credits:@teddy-vltn for the tutorial)
 
 Step 2: Install dependencies
 -------
