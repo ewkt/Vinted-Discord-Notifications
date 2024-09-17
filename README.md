@@ -54,13 +54,10 @@ a) Fill in `config.json` :
 {
   "token": "xxxxxxxx"
   "INTERVAL_TIME": "3600000",
-  "latitude":"",
-  "longitude":""
 }
 ```
 token: this is the token from when you created your bot on the discord developer portal.
 INTERVAL_TIME: this is how long the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
-latitude & longitude: configure these if you want to use the autobuy functionality, set them to your position so that your pickup point gets chosen automatically.
 
 b) Choose your searches in `channels.json`:
   - channelId: is the id of the discord channel that you want to get the search results on.
@@ -91,11 +88,13 @@ b) Choose your searches in `channels.json`:
 ]
 ```
 
-c) If you want to use autobuy you will also need to add your session tokens to `tokens.json` :
+c) Optionally, if you want to use autobuy you will also need to add your session tokens to `tokens.json`, also for the automatic selection of the pickup point you will need to add your latitude and longitude:
 ```
 {
   "access_token": "xxxxxxxx",
-  "refresh_token": "xxxxxxx"
+  "refresh_token": "xxxxxxx",
+  "latitude":"",
+  "longitude":""
 }
 ```
 (you can follow [this video tutorial](https://dai.ly/k8WySk1UDMB69UBu31Y))
