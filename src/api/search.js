@@ -3,7 +3,7 @@ import UserAgent from "user-agents";
 
 //prepares the url for the fetch request
 const parseVintedURL = (params,per_page=10) => {
-    return `https://www.vinted.fr/api/v2/catalog/items?${params}&order=newest_first&page=1&per_page=${per_page}`;
+    return `https://www.vinted.fr/api/v2/catalog/items${params}&order=newest_first&page=1&per_page=${per_page}`;
 }
 
 //send the authenticated request

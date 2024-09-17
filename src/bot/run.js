@@ -14,7 +14,7 @@ const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
         //if new articles are found post them
         if (newArticles && newArticles.length > 0) {
             process.stdout.write('\n' + channel.channelName + ' => +' + newArticles.length);
-            newArticles.forEach(article => { processedArticleIds.add(`${article.id}_${article.photo.high_resolution.timestamp}`); });
+            newArticles.forEach(article => { processedArticleIds.add(article.id); });
             await postArticles({ newArticles, channelToSend });
         }
     } catch (err) {
@@ -48,13 +48,15 @@ export const run = async (client, processedArticleIds, mySearches, config) => {
     //fetch a new cookie and cean ProcessedArticleIDs every hour    
     setInterval(async () => {
         cookieObj.value = await fetchCookie();
-        //clear values over 24h old
-        processedArticleIds.forEach((value) => {
-            const timestamp = parseInt(value.split('_')[1]);
-            if (Date.now() - timestamp > 86400000) {
-                processedArticleIds.delete(value);
-            }
-        });
+
+        const halfSize = Math.floor(processedArticleIds.size / 2);
+        let count = 0;
+        for (let id of processedArticleIds) {
+            if (count >= halfSize) break;
+            processedArticleIds.delete(id);
+            count++;
+        }
+            
         console.log("\nNew cookie fetched & Processed articles cleaned\n");
     }, config.INTERVAL_TIME);
 };

@@ -4,7 +4,7 @@ export const selectNewArticles = (articles, processedArticleIds, filterWords = [
     const filteredArticles = items.filter(({ photo, id, title }) => 
         photo && 
         photo.high_resolution.timestamp * 1000 > Date.now() - 60000 && 
-        !processedArticleIds.has(`${id}_${photo.high_resolution.timestamp}`) &&
+        !processedArticleIds.has(id) &&
         !filterWords.some(word => title.toLowerCase().includes(word))
     );
     return filteredArticles;
