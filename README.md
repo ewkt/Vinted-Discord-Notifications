@@ -7,7 +7,7 @@ It's a feature that is truly missed in the vinted app, you will never miss a goo
 And with a few more set-up steps, you will even be able to use the 'autobuy' button to buy a listing straight from the discord app! (feature is currently under development, dont hesitate to reach out)
 
 
-> __WARNING Vinted blocks requests when they are too frequent, try not to go over 1 request per second__
+> __WARNING Vinted blocks requests to their API when they are too frequent, try not to go over 1 request per second. (Think of this bot as somone refreshing the results page on vinted constantly for you)__
 
 (for eaxmple if you have 10 different searches, you should probably configre them to be refreshed every 10 seconds to avoid having issues with vinted)
 
