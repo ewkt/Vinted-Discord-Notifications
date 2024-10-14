@@ -35,10 +35,10 @@ async function cleanTime(time) {
 
 export async function postArticles({ newArticles, channelToSend }) {
     //simultanously send the messages
-    const messages = newArticles.slice(0, 10).map((item) => {
+    const messages = newArticles.slice(0, 10).map(async (item) => {
         const timestamp = new Date(item.photo.high_resolution.timestamp * 1000);
         const delayInSeconds = Math.abs((Date.now() - item.photo.high_resolution.timestamp * 1000));
-        const cleanDelay = cleanTime(delayInSeconds);
+        const cleanDelay = await cleanTime(delayInSeconds);
         //set button urls
         components[0].components[0].setURL(`https://www.vinted.fr/items/${item.id}`);
         components[0].components[1].setURL(`https://www.vinted.fr/items/${item.id}/want_it/new?`);
