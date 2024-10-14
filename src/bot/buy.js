@@ -38,9 +38,6 @@ const getTransactionId = async (itemId, sellerId, access_token) => {
 //pipeline to pay for item
 const payItem = async (transactionId, access_token, latitude, longitude) => {
     try {
-        console.log('getting checksum')
-        const article = await authorizedRequest("PUT", `https://www.vinted.fr/api/v2/transactions/${transactionId}/checkout`, undefined, access_token);
-
         console.log('selecting shipping point')
         const shipts = await authorizedRequest("GET", `https://www.vinted.fr/api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=FR&latitude=${latitude}&longitude=${longitude}&should_label_nearest_points=true`, undefined, access_token);
         
@@ -64,7 +61,9 @@ const payItem = async (transactionId, access_token, latitude, longitude) => {
                 }
             }
         };
-        await authorizedRequest("PUT", `https://www.vinted.fr/api/v2/transactions/${transactionId}/checkout`, data_shipping, access_token);
+
+        console.log('getting checksum')
+        const article = await authorizedRequest("PUT", `https://www.vinted.fr/api/v2/transactions/${transactionId}/checkout`, data_shipping, access_token);
 
         console.log('buying item')
         const data_payment = {
