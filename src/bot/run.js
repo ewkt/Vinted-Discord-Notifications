@@ -9,7 +9,7 @@ const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
         const url = new URL(channel.url);
         const channelToSend = client.channels.cache.get(channel.channelId);
         const articles = await vintedSearch(url.search, cookieObj.value) ?? { items: [] };
-        const newArticles = await selectNewArticles(articles, processedArticleIds, channel.filterWords);
+        const newArticles = await selectNewArticles(articles, processedArticleIds, channel.titleBlacklist);
 
         //if new articles are found post them
         if (newArticles && newArticles.length > 0) {
@@ -26,7 +26,7 @@ const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
 const runInterval = async (client, processedArticleIds, channel, cookieObj) => {
     try {
         await runSearch(client, processedArticleIds, channel, cookieObj);
-        setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), channel.frequency);
+        setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), channel.frequency*1000);
     } catch (err) {
         console.error('\n Error running search:', err);
     }
@@ -40,9 +40,9 @@ export const run = async (client, processedArticleIds, mySearches, config) => {
     let cookieObj = {};
     cookieObj.value = await fetchCookie();
 
-    //launch a seperate interval for each search
-    mySearches.map((channel) => {
-        runInterval(client, processedArticleIds, channel, cookieObj);
+    //launch a seperate interval for each search, but with delay to avoid too many simmultaneous requests
+    mySearches.forEach((channel, index) => {
+        setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), index*500);
     });
 
     //fetch a new cookie and cean ProcessedArticleIDs every hour    
@@ -58,5 +58,5 @@ export const run = async (client, processedArticleIds, mySearches, config) => {
         }
             
         console.log("\nNew cookie fetched & Processed articles cleaned\n");
-    }, config.INTERVAL_TIME);
+    }, config.INTERVAL_TIME*60*60*1000);
 };
