@@ -1,20 +1,20 @@
-import Discord from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 //set-up the buttons
 const components = [
-  new Discord.MessageActionRow().addComponents([
-    new Discord.MessageButton()
+  new ActionRowBuilder().addComponents([
+    new ButtonBuilder()
         .setLabel("Détails")
         .setEmoji("🗄️")
-        .setStyle("LINK"),
-    new Discord.MessageButton()
+        .setStyle(ButtonStyle.Link),
+    new ButtonBuilder()
         .setLabel("Message")
         .setEmoji("🪐")
-        .setStyle("LINK"),
-    new Discord.MessageButton()
+        .setStyle(ButtonStyle.Link),
+    new ButtonBuilder()
         .setCustomId("autobuy")
         .setLabel("Autobuy")
-        .setStyle("SUCCESS"),
+        .setStyle(ButtonStyle.Success),
     ]),
 ];
 
@@ -55,7 +55,7 @@ export async function postArticles({ newArticles, channelToSend }) {
                 image: { url: item.photo?.url },
                 footer: {text: item.user.id+"-"+item.id},
                 timestamp,
-                color: "#09b1ba",
+                color: parseInt("09b1ba", 16),
             }],
             components,
         });

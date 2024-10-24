@@ -2,7 +2,7 @@ import {authorizedRequest, newToken} from "../api/auth.js";
 import fs from 'fs';
 
 //function to refresh tokens if needed
-const checkAndRefreshTokens = async() => {
+const checkAndRefreshTokens = async(tokens) => {
     if (tokens.expiry < Date.now()) {
         try {
             const [newAccessToken, newRefreshToken, newExpiry] = await newToken(tokens.refresh_token, tokens.access_token);
@@ -11,7 +11,7 @@ const checkAndRefreshTokens = async() => {
             tokens.refresh_token = newRefreshToken;
             tokens.expiry = newExpiry;
             //write updated tokens to file
-            await fs.promises.writeFile('tokens.json', JSON.stringify(tokens));
+            await fs.promises.writeFile('tokens.json', JSON.stringify(tokens, null, 2));
         } catch (err) {
             console.error('Error refreshing tokens:', err);
         }
@@ -94,15 +94,15 @@ const payItem = async (transactionId, access_token, latitude, longitude) => {
 }
 
 //function to buy an item
-export const autobuy = async (interaction, itemId, sellerId, access_token, latitude, longitude) => {
+export const autobuy = async (interaction, itemId, sellerId, tokens) => {
     //step1: check and refresh tokens if needed
-    await checkAndRefreshTokens();
+    await checkAndRefreshTokens(tokens);
     try {
         //step2: get the transaction id
-        const transactionId = await getTransactionId(itemId, sellerId, access_token);
+        const transactionId = await getTransactionId(itemId, sellerId, tokens.access_token);
         if (transactionId) {
             //step3: pay for the item
-            await payItem(transactionId, access_token, latitude, longitude);
+            await payItem(transactionId, tokens.access_token, tokens.latitude, tokens.longitude);
     }} catch (error) {
         console.error(error);
         interaction.reply('error');
