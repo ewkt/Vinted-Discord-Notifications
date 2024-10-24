@@ -6,7 +6,7 @@
     "main": "main.js",
     "type": "module",
     "dependencies": {
-        "discord.js": "^13.1.0",
+        "discord.js": "^14.15.2",
         "fs": "^0.0.1-security",
         "https": "^1.0.0",
         "node-fetch": "^3.2.10",
