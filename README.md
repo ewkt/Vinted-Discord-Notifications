@@ -70,7 +70,7 @@ OR, alternatively, mannually configure your channels in `channels.json`:
 (https://discord.com/channels/123456789000000000/--->123456789012345678<---)
   - channelName: is a way of identifying which searches are producing results in the app logs
   - url: is the url of the vinted search you want to have notifications for, just copy and paste it from vinted in your browser!
-  - frequency: this is how fast you want the search to look for new items, in milliseconds (remember to not exceed 1 request per second)
+  - frequency: this is how fast you want the search to look for new items, in seconds (remember to not exceed 1 request per second)
   - titleBlacklist: is a list of words that you want to exclude from your search results (filters out items that have at least one of the words in their title) 
 
 ```
@@ -79,14 +79,14 @@ OR, alternatively, mannually configure your channels in `channels.json`:
     "channelId": "123456789012345678",
     "channelName": "test1",
     "url": "https://www.vinted.fr/catalog?brand_ids[]=53",
-    "frequency": 60000,
+    "frequency": 60,
     "titleBlacklist": ["nike","puma"]
   },
   {
     "channelId": "123456789012345622",
     "channelName": "test2",
     "url": "https://www.vinted.fr/catalog?brand_ids[]=50",
-    "frequency": 100000
+    "frequency": 10
   },
   {
 ....
