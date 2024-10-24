@@ -53,19 +53,25 @@ a) Fill in `config.json` :
 ```
 {
   "token": "xxxxxxxx"
-  "INTERVAL_TIME": "3600000",
+  "INTERVAL_TIME": "1",
 }
 ```
 token: this is the token from when you created your bot on the discord developer portal.
-INTERVAL_TIME: this is how long the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
+INTERVAL_TIME: this is how long (in hours) the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
 
-b) Choose your searches in `channels.json`:
+b) In the channel you want to see notifications in, use the Slash command /new_search name: url: (frequency:) (banned_keywords:) to set up the channels you want to monitor.
+  - name: is the name of your channel (used to delete it if needed)
+  - url: is the vinted url you want to monitor (eg: https://www.vinted.pl/api/v2/catalog/items?search_text=bananas&order=newest_first&page=1&per_page=10) /!\ make sure the url you use is the one of the country you are living in otherwise you might get notified for items that cannot be shipped to you!!
+  - frequency: (optional) change this if you want to refresh for new items more often (in seconds)
+  - banned_keywords: (optional) add a list of words you want to exclude from the titles of the items you are searching for
+
+OR, alternatively, mannually configure your channels in `channels.json`:
   - channelId: is the id of the discord channel that you want to get the search results on.
 (https://discord.com/channels/123456789000000000/--->123456789012345678<---)
   - channelName: is a way of identifying which searches are producing results in the app logs
   - url: is the url of the vinted search you want to have notifications for, just copy and paste it from vinted in your browser!
   - frequency: this is how fast you want the search to look for new items, in milliseconds (remember to not exceed 1 request per second)
-  - filterWords: is a list of words that you want to exclude from the title of your items 
+  - titleBlacklist: is a list of words that you want to exclude from your search results (filters out items that have at least one of the words in their title) 
 
 ```
 [
@@ -74,7 +80,7 @@ b) Choose your searches in `channels.json`:
     "channelName": "test1",
     "url": "https://www.vinted.fr/catalog?brand_ids[]=53",
     "frequency": 60000,
-    "filterWords": ["nike","puma"]
+    "titleBlacklist": ["nike","puma"]
   },
   {
     "channelId": "123456789012345622",
@@ -97,7 +103,7 @@ c) Optionally, if you want to use autobuy you will also need to add your session
   "longitude":""
 }
 ```
-(you can follow [this video tutorial](https://dai.ly/k8WySk1UDMB69UBu31Y))
+(you need to get them from your browsers network tab by capturing the login, if you need help you can follow [this video tutorial](https://dai.ly/k8WySk1UDMB69UBu31Y))
 
 
 Step 4: launch
