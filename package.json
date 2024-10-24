@@ -1,7 +1,7 @@
 {
     "name": "vinted.js",
     "author": "@ewkt",
-    "version": "1.1.0",
+    "version": "1.13.0",
     "description": "notifications for vinted",
     "main": "main.js",
     "type": "module",
