@@ -2,14 +2,14 @@ import fetch from "node-fetch";
 import UserAgent from "user-agents";
 
 //prepares the url for the fetch request
-const parseVintedURL = (params,per_page=10) => {
-    return `https://www.vinted.fr/api/v2/catalog/items${params}&order=newest_first&page=1&per_page=${per_page}`;
+const parseVintedURL = (params,host,per_page=10) => {
+    return `https://${host}/api/v2/catalog/items${params}&order=newest_first&page=1&per_page=${per_page}`;
 }
 
 //send the authenticated request
-export const vintedSearch = async (params = {}, cookie) => {
+export const vintedSearch = async (params = {},host, cookie) => {
     try {
-        const response = await fetch(parseVintedURL(params), {
+        const response = await fetch(parseVintedURL(params, host), {
             headers: {
                 "user-agent": new UserAgent().toString(),
                 "Cookie": cookie,
@@ -23,7 +23,7 @@ export const vintedSearch = async (params = {}, cookie) => {
         const data = await response.json();
         return data;
     } catch (err) {
-        console.error('Error during fetch:', err);
+        console.error('Error during fetch:', err.status);
         return { items: [] };
     }
 };

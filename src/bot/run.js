@@ -8,7 +8,7 @@ const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
         process.stdout.write('.');
         const url = new URL(channel.url);
         const channelToSend = client.channels.cache.get(channel.channelId);
-        const articles = await vintedSearch(url.search, cookieObj.value) ?? { items: [] };
+        const articles = await vintedSearch(url.search, url.host, cookieObj.value) ?? { items: [] };
         const newArticles = await selectNewArticles(articles, processedArticleIds, channel.titleBlacklist);
 
         //if new articles are found post them

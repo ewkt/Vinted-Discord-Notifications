@@ -17,7 +17,7 @@ export const fetchCookie = async (domain = "fr") => {
         cookieHeader.split(';').map(cookie => cookie.trim().split('=').map(part => part.trim()))
         )
     );
-    const requiredCookies = [ 'anon_id', '_vinted_fr_session'];
+    const requiredCookies = ['access_token_web', 'v_udt', 'v_sid','_vinted_fr_session','anon_id'];
     const cookieHeader = requiredCookies.reduce((acc, cookie) => {
         return parsedCookies[cookie] ? `${acc}${cookie}=${parsedCookies[cookie]}; ` : acc;
     }, '');
