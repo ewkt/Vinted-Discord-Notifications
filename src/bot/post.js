@@ -45,11 +45,11 @@ export async function postArticles({ newArticles, channelToSend }) {
 
         return channelToSend.send({
             embeds: [{
-                title: item.title+"  ("+item.price+"€)  "+item.size_title,
+                title: item.title+"  ("+item.price.amount+"€)  "+item.size_title,
                 url: item.url,
                 fields: [{
                     name: "\u200B",
-                    value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price}€  (${cleanDelay})\`\`\`` || "Aucun",
+                    value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price.amount}€  (${cleanDelay})\`\`\`` || "Aucun",
                     inline: true,
                 }],
                 image: { url: item.photo?.url },
