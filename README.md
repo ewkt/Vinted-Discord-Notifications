@@ -94,7 +94,7 @@ OR, alternatively, mannually configure your channels in `channels.json`:
 ]
 ```
 
-c) Optionally, if you want to use autobuy you will also need to add your session tokens to `tokens.json`, also for the automatic selection of the pickup point you will need to add your latitude and longitude:
+c) Optionally, if you want to use autobuy you will also need to add your session tokens to `autobuy.json`, also for the automatic selection of the pickup point you will need to add your latitude and longitude:
 ```
 {
   "access_token": "xxxxxxxx",
