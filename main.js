@@ -3,14 +3,14 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 
 import {run} from "./src/bot/run.js";
+import {registerCommands, handleCommands} from "./src/bot/commands.js";
 // import {autobuy} from "./src/bot/buy.js";
 // import {cancel} from "./src/bot/cancel.js";
-import {registerCommands, handleCommands} from "./src/bot/commands.js";
 
+dotenv.config();
 const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
 // uncomment for autobuy
 // const tokens = JSON.parse(fs.readFileSync('./config/autobuy.json', 'utf8'));
-dotenv.config();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 let processedArticleIds = new Set();
@@ -27,16 +27,14 @@ client.on("ready", async () => {
 
 //listen to buy button clicks
 client.on('interactionCreate', async (interaction) => {
+    if (interaction.isCommand()) {
+        handleCommands(interaction, mySearches);
     //uncomment for autobuy
-    // if (interaction.customId == 'autobuy') {
+    // } else if (interaction.customId == 'autobuy') {
     //     const [sellerId, itemId] = interaction.message.embeds[0].footer.text.split('-');
     //     autobuy(interaction, itemId, sellerId, tokens);
     // } else if (interaction.customId === 'cancel') {
-    //     cancel(interaction, itemId, sellerId, tokens);
-    // } else 
-    if (interaction.isCommand()) {
-        handleCommands(interaction, mySearches);
-
+    //     cancel(interaction, itemId, sellerId, tokens); 
     } else {
         console.log('Unknown interaction type');
     }
