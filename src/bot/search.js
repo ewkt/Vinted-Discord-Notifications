@@ -6,7 +6,6 @@ export const vintedSearch = async (channel, cookie, processedArticleIds) => {
         const url = new URL(channel.url);
         const apiUrl = `https://${url.host}/api/v2/catalog/items${url.search}&order=newest_first&page=1&per_page=10`;
         const response = await authorizedRequest("GET", apiUrl, null, null, cookie, true, false, false);
-
         const articles = selectNewArticles(response, processedArticleIds, channel);
         return articles;
     } catch (err) {
