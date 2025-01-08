@@ -1,7 +1,7 @@
 {
     "name": "vinted.js",
     "author": "@ewkt",
-    "version": "1.13.0",
+    "version": "1.13.1",
     "description": "notifications for vinted",
     "main": "main.js",
     "type": "module",
@@ -10,6 +10,8 @@
         "fs": "^0.0.1-security",
         "https": "^1.0.0",
         "node-fetch": "^3.2.10",
-        "user-agents": "^1.0.1133"
+        "dotenv": "^16.4.5",
+        "user-agents": "^1.0.1133",
+        "cheerio": "^1.0.0"
     }
 }

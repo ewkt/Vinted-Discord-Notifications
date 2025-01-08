@@ -1,21 +1,17 @@
-import {vintedSearch} from "../api/search.js";
-import {selectNewArticles} from "./filter.js";
+import {vintedSearch} from "./search.js";
 import {postArticles} from "./post.js";
-import {fetchCookie} from "../api/auth.js";
+import {fetchCookie, getCsrf} from "../api/auth.js";
 
 const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
     try {
         process.stdout.write('.');
-        const url = new URL(channel.url);
-        const channelToSend = client.channels.cache.get(channel.channelId);
-        const articles = await vintedSearch(url.search, url.host, cookieObj.value) ?? { items: [] };
-        const newArticles = await selectNewArticles(articles, processedArticleIds, channel.titleBlacklist);
+        const articles = await vintedSearch(channel, cookieObj.value, processedArticleIds);
 
         //if new articles are found post them
-        if (newArticles && newArticles.length > 0) {
-            process.stdout.write('\n' + channel.channelName + ' => +' + newArticles.length);
-            newArticles.forEach(article => { processedArticleIds.add(article.id); });
-            await postArticles({ newArticles, channelToSend });
+        if (articles && articles.length > 0) {
+            process.stdout.write('\n' + channel.channelName + ' => +' + articles.length);
+            articles.forEach(article => { processedArticleIds.add(article.id); });
+            await postArticles(articles, client.channels.cache.get(channel.channelId));
         }
     } catch (err) {
             console.error('\n Error posting articles:', err);
@@ -34,7 +30,7 @@ const runInterval = async (client, processedArticleIds, channel, cookieObj) => {
 
 
 //define the order of steps to run
-export const run = async (client, processedArticleIds, mySearches, config) => {
+export const run = async (client, processedArticleIds, mySearches) => {
 
     //initialise cookie
     let cookieObj = {};
@@ -42,13 +38,13 @@ export const run = async (client, processedArticleIds, mySearches, config) => {
 
     //launch a seperate interval for each search, but with delay to avoid too many simmultaneous requests
     mySearches.forEach((channel, index) => {
-        setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), index*500);
+        setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), index*1000);
     });
 
     //fetch a new cookie and cean ProcessedArticleIDs every hour    
     setInterval(async () => {
         cookieObj.value = await fetchCookie();
-
+        console.log('reducing processed articles size');
         const halfSize = Math.floor(processedArticleIds.size / 2);
         let count = 0;
         for (let id of processedArticleIds) {
@@ -56,7 +52,5 @@ export const run = async (client, processedArticleIds, mySearches, config) => {
             processedArticleIds.delete(id);
             count++;
         }
-            
-        console.log("\nNew cookie fetched & Processed articles cleaned\n");
-    }, config.INTERVAL_TIME*60*60*1000);
+    }, process.env.INTERVAL_TIME*60*60*1000);
 };

@@ -17,10 +17,10 @@ const loadCommands = async() => {
 }
 
 //register commands with Discord to (refreshes them if necessary)
-export const registerCommands = async (client, config) => {
+export const registerCommands = async (client) => {
     await loadCommands();
 
-    const rest = new REST({ version: '10' }).setToken(config.bot_token);
+    const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
     try {
         console.log('Started refreshing application (/) commands.');
         await rest.put(
@@ -34,12 +34,12 @@ export const registerCommands = async (client, config) => {
 }
 
 //handle command interactions
-export const handleCommands = async (interaction) => {
+export const handleCommands = async (interaction, mySearches) => {
     console.log(`Received command: ${interaction.commandName}`);
 
     try {   
         const module = await import(`./commands/${interaction.commandName}.js`);
-        await module.execute(interaction);
+        await module.execute(interaction, mySearches);
     } catch (error) {
         console.error('Error handling command:', error);
         await interaction.followUp({ content: 'There was an error while executing this command!' });

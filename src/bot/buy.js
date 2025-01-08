@@ -1,8 +1,12 @@
-import {authorizedRequest, newToken} from "../api/auth.js";
+import {getCsrf, newToken} from "../api/auth.js";
+import {authorizedRequest} from "../api/request.js";
 import fs from 'fs';
 
 //function to refresh tokens if needed
 const checkAndRefreshTokens = async(tokens) => {
+    if (!csrf_token) {
+        tokens.csrf_token = await getCsrf(tokens.access_token, null);
+    }
     if (tokens.expiry < Date.now()) {
         try {
             const [newAccessToken, newRefreshToken, newExpiry] = await newToken(tokens.refresh_token, tokens.access_token);
@@ -11,7 +15,7 @@ const checkAndRefreshTokens = async(tokens) => {
             tokens.refresh_token = newRefreshToken;
             tokens.expiry = newExpiry;
             //write updated tokens to file
-            await fs.promises.writeFile('tokens.json', JSON.stringify(tokens, null, 2));
+            await fs.promises.writeFile('../../config/autobuy.json', JSON.stringify(tokens, null, 2));
         } catch (err) {
             console.error('Error refreshing tokens:', err);
         }
@@ -19,7 +23,7 @@ const checkAndRefreshTokens = async(tokens) => {
 }
 
 //convert itemid to transactionid
-const getTransactionId = async (itemId, sellerId, access_token) => {
+const getTransactionId = async (itemId, sellerId, tokens) => {
     console.log("getting transaction id");
     try {
         const data = {
@@ -27,7 +31,17 @@ const getTransactionId = async (itemId, sellerId, access_token) => {
             "item_id": itemId,
             "opposite_user_id": sellerId
         };
-        const responseData = await authorizedRequest("POST","https://www.vinted.fr/api/v2/conversations", data, access_token);
+
+        const responseData = await authorizedRequest(
+            "POST",
+            process.env.API_URL+"conversations", 
+            data, 
+            tokens, 
+            null, 
+            c= false, 
+            t= true
+        );
+
         const id = responseData.conversation.transaction.id
         return id;
     } catch(error){
@@ -36,10 +50,18 @@ const getTransactionId = async (itemId, sellerId, access_token) => {
   }
 
 //pipeline to pay for item
-const payItem = async (transactionId, access_token, latitude, longitude) => {
+const payItem = async (transactionId, tokens) => {
     try {
         console.log('selecting shipping point')
-        const shipts = await authorizedRequest("GET", `https://www.vinted.fr/api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=FR&latitude=${latitude}&longitude=${longitude}&should_label_nearest_points=true`, undefined, access_token);
+        const shipts = await authorizedRequest(
+            "GET", 
+            process.env.API_URL+`transactions/${transactionId}/nearby_shipping_options?country_code=FR&latitude=${tokens.latitude}&longitude=${tokens.longitude}&should_label_nearest_points=true`,
+            undefined, 
+            tokens, 
+            null, 
+            false, 
+            true
+        );
         
         //select closest shipping point and get corresponding carrier id
         const point_id = 0;
@@ -62,8 +84,17 @@ const payItem = async (transactionId, access_token, latitude, longitude) => {
             }
         };
 
-        console.log('getting checksum')
-        const article = await authorizedRequest("PUT", `https://www.vinted.fr/api/v2/transactions/${transactionId}/checkout`, data_shipping, access_token);
+        //checkout the item and get the checksum
+        console.log('checking out')
+        const article = await authorizedRequest(
+            "PUT",
+            process.env.API_URL+`transactions/${transactionId}/checkout`,
+            data_shipping, 
+            tokens, 
+            null, 
+            false, 
+            true
+        );
 
         console.log('buying item')
         const data_payment = {
@@ -77,7 +108,17 @@ const payItem = async (transactionId, access_token, latitude, longitude) => {
             },
             "checksum":article.checkout.checksum
         };
-        const buy = await authorizedRequest("POST", `https://www.vinted.fr/api/v2/transactions/${transactionId}/checkout/payment`, data_payment, access_token);
+
+        //pay for the item
+        const buy = await authorizedRequest(
+            "POST", 
+            process.env.API_URL+`transactions/${transactionId}/checkout/payment`, 
+            data_payment, 
+            tokens, 
+            null, 
+            false, 
+            true
+        );
         
         if (buy.debit_status == 40){
             console.log("Payment successful");
@@ -97,12 +138,13 @@ const payItem = async (transactionId, access_token, latitude, longitude) => {
 export const autobuy = async (interaction, itemId, sellerId, tokens) => {
     //step1: check and refresh tokens if needed
     await checkAndRefreshTokens(tokens);
+    tokens = JSON.parse(fs.readFileSync('../../config/autobuy.json'));
     try {
         //step2: get the transaction id
-        const transactionId = await getTransactionId(itemId, sellerId, tokens.access_token);
+        const transactionId = await getTransactionId(itemId, sellerId, tokens);
         if (transactionId) {
             //step3: pay for the item
-            await payItem(transactionId, tokens.access_token, tokens.latitude, tokens.longitude);
+            await payItem(transactionId, tokens);
     }} catch (error) {
         console.error(error);
         interaction.reply('error');

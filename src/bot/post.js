@@ -11,10 +11,11 @@ const components = [
         .setLabel("Message")
         .setEmoji("🪐")
         .setStyle(ButtonStyle.Link),
-    new ButtonBuilder()
-        .setCustomId("autobuy")
-        .setLabel("Autobuy")
-        .setStyle(ButtonStyle.Success),
+    //uncomment to try autobuy
+    // new ButtonBuilder()
+    //     .setCustomId("autobuy")
+    //     .setLabel("Autobuy")
+    //     .setStyle(ButtonStyle.Success),
     ]),
 ];
 
@@ -33,7 +34,7 @@ async function cleanTime(time) {
     return delay;
 }
 
-export async function postArticles({ newArticles, channelToSend }) {
+export async function postArticles(newArticles, channelToSend) {
     //simultanously send the messages
     const messages = newArticles.slice(0, 10).map(async (item) => {
         const timestamp = new Date(item.photo.high_resolution.timestamp * 1000);
@@ -45,15 +46,16 @@ export async function postArticles({ newArticles, channelToSend }) {
 
         return channelToSend.send({
             embeds: [{
-                title: item.title+"  ("+item.price+"€)  "+item.size_title,
+                title: item.title+"  ("+item.price.amount+"€)  "+item.size_title,
                 url: item.url,
                 fields: [{
                     name: "\u200B",
-                    value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price}€  (${cleanDelay})\`\`\`` || "Aucun",
+                    value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price.amount}€  (${cleanDelay})\`\`\`` || "Aucun",
                     inline: true,
                 }],
                 image: { url: item.photo?.url },
-                footer: {text: item.user.id+"-"+item.id},
+                //uncomment this for autobuy
+                // footer: {text: item.user.id+"-"+item.id},
                 timestamp,
                 color: parseInt("09b1ba", 16),
             }],

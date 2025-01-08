@@ -1,34 +1,42 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
+import dotenv from 'dotenv';
 
 import {run} from "./src/bot/run.js";
-import {autobuy} from "./src/bot/buy.js";
+// import {autobuy} from "./src/bot/buy.js";
+// import {cancel} from "./src/bot/cancel.js";
 import {registerCommands, handleCommands} from "./src/bot/commands.js";
 
 const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
-const tokens = JSON.parse(fs.readFileSync('./config/autobuy.json', 'utf8'));
-const config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
+// uncomment for autobuy
+// const tokens = JSON.parse(fs.readFileSync('./config/autobuy.json', 'utf8'));
+dotenv.config();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 let processedArticleIds = new Set();
 
 //connect the bot to the server
-client.login(config.bot_token);
+client.login(process.env.BOT_TOKEN);
 
 //launch the bot
 client.on("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    registerCommands(client, config);
-    run(client, processedArticleIds, mySearches, config)
+    registerCommands(client);
+    run(client, processedArticleIds, mySearches);
 });
 
 //listen to buy button clicks
 client.on('interactionCreate', async (interaction) => {
-    if (interaction.customId == 'autobuy') {
-        const [sellerId, itemId] = interaction.message.embeds[0].footer.text.split('-');
-        autobuy(interaction, itemId, sellerId, tokens);
-    } else if (interaction.isCommand()) {
-        handleCommands(interaction);
+    //uncomment for autobuy
+    // if (interaction.customId == 'autobuy') {
+    //     const [sellerId, itemId] = interaction.message.embeds[0].footer.text.split('-');
+    //     autobuy(interaction, itemId, sellerId, tokens);
+    // } else if (interaction.customId === 'cancel') {
+    //     cancel(interaction, itemId, sellerId, tokens);
+    // } else 
+    if (interaction.isCommand()) {
+        handleCommands(interaction, mySearches);
+
     } else {
         console.log('Unknown interaction type');
     }
