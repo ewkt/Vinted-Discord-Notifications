@@ -58,7 +58,9 @@ a) Fill in `.env` unsing the `.env.txt` template :
 }
 ```
 BOT_TOKEN: this is the token from when you created your bot on the discord developer portal.
+
 INTERVAL_TIME: this is how long (in hours) the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
+
 API_URL: this is the root for the api callsthe bot makes
 
 b) In the channel you want to see notifications in, use the Slash command /new_search name: url: (frequency:) (banned_keywords:) to set up the channels you want to monitor.
