@@ -49,15 +49,17 @@ npm i
 Step 3: configure the bot
 -------
 
-a) Fill in `config.json` :
+a) Fill in `.env` unsing the `.env.txt` template :
 ```
 {
-  "token": "xxxxxxxx"
-  "INTERVAL_TIME": "1",
+  BOT_TOKEN=xxxx
+  INTERVAL_TIME=1
+  API_URL=https://www.vinted.fr/api/v2/
 }
 ```
-token: this is the token from when you created your bot on the discord developer portal.
+BOT_TOKEN: this is the token from when you created your bot on the discord developer portal.
 INTERVAL_TIME: this is how long (in hours) the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
+API_URL: this is the root for the api callsthe bot makes
 
 b) In the channel you want to see notifications in, use the Slash command /new_search name: url: (frequency:) (banned_keywords:) to set up the channels you want to monitor.
   - name: is the name of your channel (used to delete it if needed)
@@ -94,7 +96,7 @@ OR, alternatively, mannually configure your channels in `channels.json`:
 ]
 ```
 
-c) Optionally, if you want to use autobuy you will also need to add your session tokens to `autobuy.json`, also for the automatic selection of the pickup point you will need to add your latitude and longitude:
+c) Optionally, if you want to use autobuy you will also need to add your session tokens to `autobuy.json`, also for the automatic selection of the pickup point you will need to add your latitude and longitude. You will also need to uncomment various parts of the code (indicated). Beware this version of the project works punctually but needs more work!
 ```
 {
   "access_token": "xxxxxxxx",
