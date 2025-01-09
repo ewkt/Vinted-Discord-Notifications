@@ -49,7 +49,7 @@ npm i
 Step 3: configure the bot
 -------
 
-a) Fill in `.env` unsing the `.env.txt` template :
+a) Fill in `.env` unsing the following template :
 ```
 {
   BOT_TOKEN=xxxx
