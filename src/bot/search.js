@@ -38,6 +38,7 @@ const handleParams = (url) => {
         min: params.get('price_from') || '',
         max: params.get('price_to') || '',
         currency: params.get('currency') || 'EUR',
+        brand: params.getAll('brand_ids[]').join(',') || '',
         size: params.getAll('size_ids[]').join(',') || '',
         status: params.getAll('status_ids[]').join(',') || '',
         colour: params.getAll('color_ids[]').join(',') || '',
