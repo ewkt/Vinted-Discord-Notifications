@@ -4,7 +4,8 @@ import { authorizedRequest } from "../api/request.js";
 export const vintedSearch = async (channel, cookie, processedArticleIds) => {
     try {
         const url = new URL(channel.url);
-        const apiUrl = `https://${url.host}/api/v2/catalog/items${url.search}&order=newest_first&page=1&per_page=10`;
+        const ids = handleParams(url);
+        const apiUrl = `https://www.vinted.fr/api/v2/catalog/items?search_text=${ids.text}&catalog_ids=${ids.catalog}&price_from=${ids.min}&price_to=${ids.max}&currency=${ids.currency}&catalog_from=0&size_ids=${ids.size}&brand_ids=${ids.brand}&status_ids=${ids.status}&color_ids=${ids.colour}&patterns_ids=${ids.pattern}&material_ids=${ids.material}&order=newest_first&page=1&per_page=10`;
         const response = await authorizedRequest("GET", apiUrl, null, null, cookie, true, false, false);
 
         const articles = selectNewArticles(response, processedArticleIds, channel);
@@ -27,4 +28,22 @@ const selectNewArticles = (articles, processedArticleIds, channel) => {
         !titleBlacklist.some(word => title.toLowerCase().includes(word))
     );
     return filteredArticles;
-  };
+};
+
+const handleParams = (url) => {
+    const urlObj = new URL(url);
+    const params = new URLSearchParams(urlObj.search);
+    const idMap = {
+        text: params.get('search_text') || '',
+        catalog: params.getAll('catalog[]') || '',
+        min: params.get('price_from') || '',
+        max: params.get('price_to') || '',
+        currency: params.get('currency') || 'EUR',
+        size: params.getAll('size_ids[]').join(',') || '',
+        status: params.getAll('status_ids[]').join(',') || '',
+        colour: params.getAll('color_ids[]').join(',') || '',
+        pattern: params.getAll('patterns_ids[]').join(',') || '',
+        material: params.getAll('material_ids[]').join(',') || '',
+    };
+    return idMap;
+};
