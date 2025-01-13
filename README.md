@@ -49,7 +49,7 @@ npm i
 Step 3: configure the bot
 -------
 
-a) Fill in `.env` unsing the `.env.txt` template :
+a) Fill in `.env` unsing the following template :
 ```
 {
   BOT_TOKEN=xxxx
@@ -58,8 +58,10 @@ a) Fill in `.env` unsing the `.env.txt` template :
 }
 ```
 BOT_TOKEN: this is the token from when you created your bot on the discord developer portal.
+
 INTERVAL_TIME: this is how long (in hours) the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
-API_URL: this is the root for the api callsthe bot makes
+
+API_URL: this is the root for the api calls the bot makes (you can change to your prefered country)
 
 b) In the channel you want to see notifications in, use the Slash command /new_search name: url: (frequency:) (banned_keywords:) to set up the channels you want to monitor.
   - name: is the name of your channel (used to delete it if needed)
