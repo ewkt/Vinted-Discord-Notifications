@@ -59,15 +59,15 @@ BOT_TOKEN: this is the token from when you created your bot on the discord devel
 
 INTERVAL_TIME: this is how long (in hours) the bot waits between two refreshes of the cookie (it is recommended to keep the same cookie for 2h max)
 
-API_URL: this is the root for the api calls the bot makes (you can change to your prefered country)
+API_URL: this is the root for the api calls the bot makes (you can change .fr to your prefered country)
 
-b) In the channel you want to see notifications in, use the Slash command /new_search name: url: (frequency:) (banned_keywords:) to set up the channels you want to monitor.
+b) In the channel you want to see notifications in, use the Slash command /new_search name: url: (frequency:) (banned_keywords:) to set up the channels you want to monitor once the bot is launched. These new searches will be written to the configuration and the changes will be applied on the next restart of the bot.
   - name: is the name of your channel (used to delete it if needed)
-  - url: is the vinted url you want to monitor (eg: https://www.vinted.pl/api/v2/catalog/items?search_text=bananas&order=newest_first&page=1&per_page=10) /!\ make sure the url you use is the one of the country you are living in otherwise you might get notified for items that cannot be shipped to you!!
+  - url: is the vinted url you want to monitor (eg: https://www.vinted.pl/catalog?search_text=bananas&order=newest_first&page=1&per_page=10) /!\ make sure the url you use is the one of the country you are living in otherwise you might get notified for items that cannot be shipped to you!!
   - frequency: (optional) change this if you want to refresh for new items more often (in seconds)
   - banned_keywords: (optional) add a list of words you want to exclude from the titles of the items you are searching for
 
-OR, alternatively, mannually configure your channels in `channels.json`:
+OR, alternatively, you can configure your channels mannually in `channels.json`:
   - channelId: is the id of the discord channel that you want to get the search results on.
 (https://discord.com/channels/123456789000000000/--->123456789012345678<---)
   - channelName: is a way of identifying which searches are producing results in the app logs
