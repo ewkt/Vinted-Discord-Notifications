@@ -11,11 +11,10 @@ const components = [
         .setLabel("Message")
         .setEmoji("🪐")
         .setStyle(ButtonStyle.Link),
-    //uncomment to try autobuy
-    // new ButtonBuilder()
-    //     .setCustomId("autobuy")
-    //     .setLabel("Autobuy")
-    //     .setStyle(ButtonStyle.Success),
+    new ButtonBuilder()
+        .setCustomId("autobuy")
+        .setLabel("Autobuy")
+        .setStyle(ButtonStyle.Success),
     ]),
 ];
 
@@ -54,8 +53,7 @@ export async function postArticles(newArticles, channelToSend) {
                     inline: true,
                 }],
                 image: { url: item.photo?.url },
-                //uncomment this for autobuy
-                // footer: {text: item.user.id+"-"+item.id},
+                footer: {text: item.user.id+"-"+item.id},
                 timestamp,
                 color: parseInt("09b1ba", 16),
             }],
