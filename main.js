@@ -3,7 +3,7 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 
 import {run} from "./src/bot/run.js";
-import {registerCommands, handleCommands} from "./src/bot/commands.js";
+import {registerCommands, handleCommands} from "./src/commands.js";
 import {autobuy} from "./src/bot/buy.js";
 
 dotenv.config();
