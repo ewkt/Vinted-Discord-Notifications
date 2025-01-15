@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
 
-import {run} from "./src/bot/run.js";
+import {run} from "./src/run.js";
 import {registerCommands, handleCommands} from "./src/commands.js";
 
 dotenv.config();
