@@ -1,6 +1,6 @@
 import {vintedSearch} from "./search.js";
 import {postArticles} from "./post.js";
-import {fetchCookie, getCsrf} from "../api/auth.js";
+import {fetchCookie} from "../api/auth.js";
 
 const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
     try {
