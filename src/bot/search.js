@@ -22,7 +22,7 @@ const selectNewArticles = (articles, processedArticleIds, channel) => {
     
     const filteredArticles = items.filter(({ photo, id, title, user }) => 
         photo && 
-        photo.high_resolution.timestamp * 1000 > Date.now() - 60000 && 
+        photo.high_resolution.timestamp * 1000 > Date.now() - 600000 && 
         !processedArticleIds.has(id) &&
         !titleBlacklist.some(word => title.toLowerCase().includes(word))
     );
