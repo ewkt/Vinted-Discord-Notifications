@@ -5,7 +5,7 @@ export const vintedSearch = async (channel, cookie, processedArticleIds) => {
     try {
         const url = new URL(channel.url);
         const ids = handleParams(url);
-        const apiUrl = `https://www.vinted.fr/api/v2/catalog/items?search_text=${ids.text}&catalog_ids=${ids.catalog}&price_from=${ids.min}&price_to=${ids.max}&currency=${ids.currency}&catalog_from=0&size_ids=${ids.size}&brand_ids=${ids.brand}&status_ids=${ids.status}&color_ids=${ids.colour}&patterns_ids=${ids.pattern}&material_ids=${ids.material}&order=newest_first&page=1&per_page=10`;
+        const apiUrl = `https://${url.host}/api/v2/catalog/items?search_text=${ids.text}&catalog_ids=${ids.catalog}&price_from=${ids.min}&price_to=${ids.max}&currency=${ids.currency}&catalog_from=0&size_ids=${ids.size}&brand_ids=${ids.brand}&status_ids=${ids.status}&color_ids=${ids.colour}&patterns_ids=${ids.pattern}&material_ids=${ids.material}&order=newest_first&page=1&per_page=10`;
         const response = await authorizedRequest("GET", apiUrl, null, null, cookie, true, false, false);
         const articles = selectNewArticles(response, processedArticleIds, channel);
         return articles;
