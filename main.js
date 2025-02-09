@@ -2,8 +2,8 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
 
-import {run} from "./src/run.js";
-import {registerCommands, handleCommands} from "./src/commands.js";
+import { run } from "./src/run.js";
+import { registerCommands, handleCommands } from "./src/commands.js";
 
 dotenv.config();
 const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
