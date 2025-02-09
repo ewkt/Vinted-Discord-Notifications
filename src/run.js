@@ -1,6 +1,6 @@
-import {vintedSearch} from "./bot/search.js";
-import {postArticles} from "./bot/post.js";
-import {fetchCookie} from "./api/auth.js";
+import { vintedSearch } from "./bot/search.js";
+import { postArticles } from "./bot/post.js";
+import { fetchCookie } from "./api/auth.js";
 
 const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
     try {

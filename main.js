@@ -2,13 +2,12 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
 
-import {run} from "./src/run.js";
-import {registerCommands, handleCommands} from "./src/commands.js";
-import {autobuy} from "./src/bot/buy.js";
+import { run } from "./src/run.js";
+import { autobuy } from "./src/bot/buy.js";
+import { registerCommands, handleCommands } from "./src/commands.js";
 
-dotenv.config();
 const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
-const tokens = JSON.parse(fs.readFileSync('./config/autobuy.json', 'utf8'));
+dotenv.config();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 let processedArticleIds = new Set();
@@ -25,11 +24,11 @@ client.on("ready", async () => {
 
 //listen to buy button clicks
 client.on('interactionCreate', async (interaction) => {
-    if (interaction.isCommand()) {
-        handleCommands(interaction, mySearches);
-    } else if (interaction.customId == 'autobuy') {
+    if (interaction.customId == 'autobuy') {
         const [sellerId, itemId] = interaction.message.embeds[0].footer.text.split('-');
-        autobuy(interaction, itemId, sellerId, tokens);
+        autobuy(interaction, itemId, sellerId);
+    } else if (interaction.isCommand()) {
+        handleCommands(interaction, mySearches);
     } else {
         console.log('Unknown interaction type');
     }

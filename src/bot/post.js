@@ -62,3 +62,29 @@ export async function postArticles(newArticles, channelToSend) {
     });
     await Promise.all(messages);
 }
+
+//send the user a private message with the purchase details
+export async function purchaseMessage(interaction, purchaseInfo) {
+    const link = `https://www.vinted.fr/items/${purchaseInfo.itemId}`;
+    const dmButton = new ActionRowBuilder().addComponents([
+        new ButtonBuilder()
+            .setLabel("Message")
+            .setEmoji("🪐")
+            .setStyle(ButtonStyle.Link)
+            .setURL(`https://www.vinted.fr/inbox/${purchaseInfo.conversationId}`),
+    ]);
+    await interaction.user.send({
+        content: link,
+        embeds: [{
+            title: "Purchase details",
+            url : link,
+            fields: [
+                { name: "Point", value: (purchaseInfo.pointName || "N/A").toString() },
+                { name: "Address", value: (purchaseInfo.pointAddress || "N/A").toString() },
+                { name: "Carrier", value: (purchaseInfo.carrier || "N/A").toString() },
+            ],
+            color: parseInt("09b1ba", 16),
+        }],
+        components: [dmButton]
+    });
+}
