@@ -29,9 +29,11 @@ const getTransactionId = async (itemId, sellerId, userTokens) => {
 const payItem = async (interaction, itemId, transactionId, conversationId, userTokens) => {
     try {
         console.log('selecting shipping point')
+        const url = new URL(process.env.BASE_URL);
+        const countryCode = url.hostname.split('.').pop().toUpperCase();
         const shipts = await authorizedRequest({
             method: "GET", 
-            url: process.env.BASE_URL+`api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=FR&latitude=${userTokens.latitude}&longitude=${userTokens.longitude}&should_label_nearest_points=true`,
+            url: `${process.env.BASE_URL}api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=${countryCode}&latitude=${userTokens.latitude}&longitude=${userTokens.longitude}&should_label_nearest_points=true`,
             tokens: userTokens
         });
         
