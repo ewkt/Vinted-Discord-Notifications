@@ -40,8 +40,8 @@ export async function postArticles(newArticles, channelToSend) {
         const delayInSeconds = Math.abs((Date.now() - item.photo.high_resolution.timestamp * 1000));
         const cleanDelay = await cleanTime(delayInSeconds);
         //set button urls
-        components[0].components[0].setURL(`https://www.vinted.fr/items/${item.id}`);
-        components[0].components[1].setURL(`https://www.vinted.fr/items/${item.id}/want_it/new?`);
+        components[0].components[0].setURL(`${process.env.BASE_URL}items/${item.id}`);
+        components[0].components[1].setURL(`${process.env.BASE_URL}items/${item.id}/want_it/new?`);
 
         return channelToSend.send({
             embeds: [{
@@ -65,13 +65,13 @@ export async function postArticles(newArticles, channelToSend) {
 
 //send the user a private message with the purchase details
 export async function purchaseMessage(interaction, purchaseInfo) {
-    const link = `https://www.vinted.fr/items/${purchaseInfo.itemId}`;
+    const link = `${process.env.BASE_URL}items/${purchaseInfo.itemId}`;
     const dmButton = new ActionRowBuilder().addComponents([
         new ButtonBuilder()
             .setLabel("Message")
             .setEmoji("🪐")
             .setStyle(ButtonStyle.Link)
-            .setURL(`https://www.vinted.fr/inbox/${purchaseInfo.conversationId}`),
+            .setURL(`${process.env.BASE_URL}inbox/${purchaseInfo.conversationId}`),
     ]);
     await interaction.user.send({
         content: link,
