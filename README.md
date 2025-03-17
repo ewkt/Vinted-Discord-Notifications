@@ -49,11 +49,11 @@ Step 3: configure the bot
 
 a) Fill in `.env` unsing the following template :
 ```
-{
-  BOT_TOKEN=xxxx
-  INTERVAL_TIME=1
-  BASE_URL=https://www.vinted.fr/
-}
+
+BOT_TOKEN=xxxx
+INTERVAL_TIME=1
+BASE_URL=https://www.vinted.fr/
+
 ```
 BOT_TOKEN: this is the token from when you created your bot on the discord developer portal.
 
