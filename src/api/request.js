@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import UserAgent from 'user-agents';
 
-//general fucntion to make an authorized request
+//general function to make an authorized request
 export const authorizedRequest = async ({method, url, oldUrl = null , data = null, cookies = null, logs = true} = {}) => {
     try {
         const headers = {

@@ -1,12 +1,12 @@
 import { authorizedRequest } from './request.js';
 
-//fetch cookies for the domain with advancded option to have cloudfare cookie
+//fetch cookies for the domain with advanced option to have cloudflare cookie
 export const fetchCookie = async () => {
     //fetch the standard cookies
     console.log('fetching cookies');
     const response = await authorizedRequest({
-        method: "GET", 
-        url: process.env.BASE_URL+"how_it_works", 
+        method: "GET",
+        url: process.env.BASE_URL+"how_it_works",
     });
 
     const sessionCookies = response.headers.get('set-cookie');
