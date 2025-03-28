@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const commands = [];
 const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
 
-//load commad modules
+//load command modules
 const loadCommands = async() => {
     for (const file of commandFiles) {
         const module = await import(`./commands/${file}`);
@@ -37,7 +37,7 @@ export const registerCommands = async (client) => {
 export const handleCommands = async (interaction, mySearches) => {
     console.log(`Received command: ${interaction.commandName}`);
 
-    try {   
+    try {
         const module = await import(`./commands/${interaction.commandName}.js`);
         await module.execute(interaction, mySearches);
     } catch (error) {

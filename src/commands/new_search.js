@@ -35,7 +35,7 @@ const validateUrl = (url) => {
         if (route !== "catalog") {
             return "invalid-url-with-example";
         }
-        
+
         const urlObj = new URL(url);
         const searchParams = urlObj.searchParams;
         // check if the URL has at least one query parameter
@@ -92,7 +92,7 @@ export const execute = async (interaction) => {
 
         const embed = new EmbedBuilder()
             .setTitle("Search saved!")
-            .setDescription("Monitoring for " + name + " wil be started on next restart.")
+            .setDescription("Monitoring for " + name + " will be started on next restart.")
             .setColor(0x00FF00);
 
         await interaction.followUp({ embeds: [embed]});

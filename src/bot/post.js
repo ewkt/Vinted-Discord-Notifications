@@ -4,7 +4,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 const components = [
   new ActionRowBuilder().addComponents([
     new ButtonBuilder()
-        .setLabel("Détails")
+        .setLabel("Details")
         .setEmoji("🗄️")
         .setStyle(ButtonStyle.Link),
     new ButtonBuilder()
@@ -30,7 +30,7 @@ async function cleanTime(time) {
 }
 
 export async function postArticles(newArticles, channelToSend) {
-    //simultanously send the messages
+    //simultaneously send the messages
     const messages = newArticles.slice(0, 10).map(async (item) => {
         const timestamp = new Date(item.photo.high_resolution.timestamp * 1000);
         const delayInSeconds = Math.abs((Date.now() - item.photo.high_resolution.timestamp * 1000));

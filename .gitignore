@@ -1,0 +1,8 @@
+# ignore ALL files in node_modules installation directory
+node_modules/
+
+# ignore package-lock.json file
+package-lock.json
+
+# ignore all template files for commit
+*_template*

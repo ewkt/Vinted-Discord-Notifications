@@ -18,7 +18,7 @@ const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
         }
 };
 
-//run the search and set a timeout to run it again   
+//run the search and set a timeout to run it again
 const runInterval = async (client, processedArticleIds, channel, cookieObj) => {
     try {
         await runSearch(client, processedArticleIds, channel, cookieObj);
@@ -36,12 +36,12 @@ export const run = async (client, processedArticleIds, mySearches) => {
     let cookieObj = {};
     cookieObj.value = await fetchCookie();
 
-    //launch a seperate interval for each search, but with delay to avoid too many simmultaneous requests
+    //launch a separate interval for each search, but with delay to avoid too many simultaneous requests
     mySearches.forEach((channel, index) => {
         setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), index*1000);
     });
 
-    //fetch a new cookie and cean ProcessedArticleIDs every hour    
+    //fetch a new cookie and clean ProcessedArticleIDs every hour
     setInterval(async () => {
         cookieObj.value = await fetchCookie();
         console.log('reducing processed articles size');
