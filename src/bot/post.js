@@ -40,9 +40,9 @@ export async function postArticles(newArticles, channelToSend) {
         const delayInSeconds = Math.abs((Date.now() - item.photo.high_resolution.timestamp * 1000));
         const cleanDelay = await cleanTime(delayInSeconds);
         //set button urls
-        components[0].components[0].setURL(`https://www.vinted.fr/items/${item.id}`);
-        components[0].components[1].setURL(`https://www.vinted.fr/items/${item.id}/want_it/new?`);
-        components[0].components[2].setURL(`https://www.vinted.fr/transaction/buy/new?source_screen=item&transaction%5Bitem_id%5D=${item.id}`);
+        components[0].components[0].setURL(`${process.env.BASE_URL}items/${item.id}`);
+        components[0].components[1].setURL(`${process.env.BASE_URL}items/${item.id}/want_it/new?`);
+        components[0].components[2].setURL(`${process.env.BASE_URL}transaction/buy/new?source_screen=item&transaction%5Bitem_id%5D=${item.id}`);
 
         return channelToSend.send({
             embeds: [{
