@@ -11,6 +11,10 @@ const components = [
         .setLabel("Message")
         .setEmoji("🪐")
         .setStyle(ButtonStyle.Link),
+    new ButtonBuilder()
+        .setLabel("Buy")
+        .setEmoji("💸")
+        .setStyle(ButtonStyle.Link),
     ]),
 ];
 
@@ -38,6 +42,7 @@ export async function postArticles(newArticles, channelToSend) {
         //set button urls
         components[0].components[0].setURL(`https://www.vinted.fr/items/${item.id}`);
         components[0].components[1].setURL(`https://www.vinted.fr/items/${item.id}/want_it/new?`);
+        components[0].components[2].setURL(`https://www.vinted.fr/transaction/buy/new?source_screen=item&transaction%5Bitem_id%5D=${item.id}`);
 
         return channelToSend.send({
             embeds: [{
