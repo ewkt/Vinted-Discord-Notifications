@@ -33,7 +33,11 @@ const countrySettings = {
     "Hungary": { url: "https://www.vinted.hu/", currency: "HUF" }
 };
 
-// Ask the user to select a country
+// Default country settings (in case selection fails)
+let BASE_URL = countrySettings["France"].url;
+let BASE_CURRENCY = countrySettings["France"].currency;
+
+// Ask the user to select a country (without removing anything from the original code)
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -42,15 +46,13 @@ const rl = readline.createInterface({
 rl.question(`Select a country (${Object.keys(countrySettings).join(', ')}): `, (userCountry) => {
     userCountry = userCountry.trim();
 
-    // Validate user input, default to France if invalid
-    if (!countrySettings[userCountry]) {
+    // Validate user input
+    if (countrySettings[userCountry]) {
+        BASE_URL = countrySettings[userCountry].url;
+        BASE_CURRENCY = countrySettings[userCountry].currency;
+    } else {
         console.log("Invalid country. Defaulting to France.");
-        userCountry = "France";
     }
-
-    // Set base URL and currency dynamically
-    const BASE_URL = countrySettings[userCountry].url;
-    const BASE_CURRENCY = countrySettings[userCountry].currency;
 
     console.log(`Bot is running for country: ${userCountry} with currency: ${BASE_CURRENCY}`);
     console.log(`Using Vinted URL: ${BASE_URL}`);
@@ -69,7 +71,7 @@ rl.question(`Select a country (${Object.keys(countrySettings).join(', ')}): `, (
         run(client, processedArticleIds, mySearches, BASE_URL, BASE_CURRENCY);
     });
 
-    // Listen to buy button clicks and handle commands
+    // Listen to button clicks and handle commands
     client.on('interactionCreate', async (interaction) => {
         if (interaction.isCommand()) {
             handleCommands(interaction, mySearches);
