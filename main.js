@@ -8,6 +8,9 @@ import { registerCommands, handleCommands } from "./src/commands.js";
 
 dotenv.config();
 
+// Load user searches from the configuration file
+const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
+
 // Supported countries with full names
 const countrySettings = {
     "France": { url: "https://www.vinted.fr/", currency: "EUR" },
@@ -51,9 +54,6 @@ rl.question(`Select a country (${Object.keys(countrySettings).join(', ')}): `, (
 
     console.log(`Bot is running for country: ${userCountry} with currency: ${BASE_CURRENCY}`);
     console.log(`Using Vinted URL: ${BASE_URL}`);
-
-    // Load user searches from the configuration file
-    const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
 
     // Create a new Discord client with necessary intents
     const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
