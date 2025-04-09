@@ -10,7 +10,6 @@ const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'))
 dotenv.config();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
-let processedArticleIds = new Set();
 
 //connect the bot to the server
 client.login(process.env.BOT_TOKEN);
@@ -19,7 +18,7 @@ client.login(process.env.BOT_TOKEN);
 client.on("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     registerCommands(client);
-    run(client, processedArticleIds, mySearches);
+    run(client, mySearches);
 });
 
 //listen to buy button clicks

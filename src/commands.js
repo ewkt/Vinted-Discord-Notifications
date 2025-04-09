@@ -9,7 +9,7 @@ const commands = [];
 const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
 
 //load commad modules
-const loadCommands = async() => {
+const loadCommands = async () => {
     for (const file of commandFiles) {
         const module = await import(`./commands/${file}`);
         commands.push(module.data.toJSON());

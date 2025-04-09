@@ -14,43 +14,47 @@ const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
             await postArticles(articles, client.channels.cache.get(channel.channelId));
         }
     } catch (err) {
-            console.error('\n Error posting articles:', err);
-        }
+        console.error('\nError running bot:', err);
+    }
 };
 
 //run the search and set a timeout to run it again   
 const runInterval = async (client, processedArticleIds, channel, cookieObj) => {
-    try {
-        await runSearch(client, processedArticleIds, channel, cookieObj);
-        setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), channel.frequency*1000);
-    } catch (err) {
-        console.error('\n Error running search:', err);
-    }
+    await runSearch(client, processedArticleIds, channel, cookieObj);
+    setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), channel.frequency*1000);
 };
 
-
 //define the order of steps to run
-export const run = async (client, processedArticleIds, mySearches) => {
-
-    //initialise cookie
+export const run = async (client, mySearches) => {
     let cookieObj = {};
+    let processedArticleIds = new Set();
+    
+    //initialise cookie
     cookieObj.value = await fetchCookie();
 
-    //launch a seperate interval for each search, but with delay to avoid too many simmultaneous requests
+    //launch a seperate interval for each search after having logged the 96 current articles, 
+    //but with delay to stagger and avoid too many simmultaneous requests
     mySearches.forEach((channel, index) => {
-        setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), index*1000);
+        setTimeout(async () => {
+            try {
+                const initArticles = await vintedSearch(channel, cookieObj.value, processedArticleIds);
+                initArticles.forEach(article => { processedArticleIds.add(article.id); });
+            } catch (err) {
+                console.error('\nError in initializing articles', err);
+            }
+            await runInterval(client, processedArticleIds, channel, cookieObj);
+        }, index*1000);
     });
 
-    //fetch a new cookie and cean ProcessedArticleIDs every hour    
+    //fetch a new cookie and cean ProcessedArticleIDs at interval    
     setInterval(async () => {
-        cookieObj.value = await fetchCookie();
-        console.log('reducing processed articles size');
-        const halfSize = Math.floor(processedArticleIds.size / 2);
-        let count = 0;
-        for (let id of processedArticleIds) {
-            if (count >= halfSize) break;
-            processedArticleIds.delete(id);
-            count++;
+        try {
+            cookieObj.value = await fetchCookie();
+            console.log('reducing processed articles size');
+            const halfSize = Math.floor(processedArticleIds.size / 2);
+            processedArticleIds = new Set([...processedArticleIds].slice(halfSize)); // convert to an array and keep only the last half of the elements
+        } catch (err) {
+            console.error('\nError getting new cookie:', err);
         }
-    }, process.env.INTERVAL_TIME*60*60*1000);
+    }, 1*60*60*1000); //set interval to 1h
 };
