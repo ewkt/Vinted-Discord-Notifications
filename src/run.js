@@ -1,11 +1,11 @@
 import { vintedSearch } from "./bot/search.js";
 import { postArticles } from "./bot/post.js";
-import { fetchCookie } from "./api/auth.js";
+import { fetchCookies } from "./api/fetch-auth.js";
 
-const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
+const runSearch = async (client, processedArticleIds, channel) => {
     try {
         process.stdout.write('.');
-        const articles = await vintedSearch(channel, cookieObj.value, processedArticleIds);
+        const articles = await vintedSearch(channel, processedArticleIds);
 
         //if new articles are found post them
         if (articles && articles.length > 0) {
@@ -19,42 +19,38 @@ const runSearch = async (client, processedArticleIds, channel, cookieObj) => {
 };
 
 //run the search and set a timeout to run it again   
-const runInterval = async (client, processedArticleIds, channel, cookieObj) => {
-    await runSearch(client, processedArticleIds, channel, cookieObj);
-    setTimeout(() => runInterval(client, processedArticleIds, channel, cookieObj), channel.frequency*1000);
+const runInterval = async (client, processedArticleIds, channel) => {
+    await runSearch(client, processedArticleIds, channel);
+    setTimeout(() => runInterval(client, processedArticleIds, channel), channel.frequency*1000);
 };
 
-//define the order of steps to run
+//first, get cookies, then init the article id set, then launch the simmultaneous searches
 export const run = async (client, mySearches) => {
-    let cookieObj = {};
     let processedArticleIds = new Set();
-    
-    //initialise cookie
-    cookieObj.value = await fetchCookie();
-
-    //launch a seperate interval for each search after having logged the 96 current articles, 
-    //but with delay to stagger and avoid too many simmultaneous requests
+    await fetchCookies();
+ 
+    //stagger start time for searches to avoid too many simmultaneous requests
     mySearches.forEach((channel, index) => {
         setTimeout(async () => {
             try {
-                const initArticles = await vintedSearch(channel, cookieObj.value, processedArticleIds);
+                const initArticles = await vintedSearch(channel, processedArticleIds);
                 initArticles.forEach(article => { processedArticleIds.add(article.id); });
             } catch (err) {
-                console.error('\nError in initializing articles', err);
+                console.error('\nError in initializing articles:', err);
             }
-            await runInterval(client, processedArticleIds, channel, cookieObj);
+            await runInterval(client, processedArticleIds, channel);
         }, index*1000);
     });
 
-    //fetch a new cookie and cean ProcessedArticleIDs at interval    
+    //fetch new cookies and clean ProcessedArticleIDs at interval    
     setInterval(async () => {
         try {
-            cookieObj.value = await fetchCookie();
+            await fetchCookies();
             console.log('reducing processed articles size');
             const halfSize = Math.floor(processedArticleIds.size / 2);
-            processedArticleIds = new Set([...processedArticleIds].slice(halfSize)); // convert to an array and keep only the last half of the elements
+            processedArticleIds = new Set([...processedArticleIds].slice(halfSize)); //convert to an array and keep only the last half of the elements
         } catch (err) {
-            console.error('\nError getting new cookie:', err);
+            console.error('\nError getting new cookies:', err);
         }
-    }, 1*60*60*1000); //set interval to 1h
+    }, 1*60*60*1000); //set interval to 1h, after which session could be expired
 };
