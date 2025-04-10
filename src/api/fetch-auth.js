@@ -25,7 +25,12 @@ export const fetchCookies = async () => {
         const cookieHeader = sessionCookiesArray
             .map(cookie => cookie.split(';')[0].trim())
             .join('; ');
-        authManager.setCookies(cookieHeader);
+
+        const cookieObject = {
+            refresh: cookieHeader.match(/refresh_token_web=([^;]+)/)[1],
+            access: cookieHeader.match(/access_token_web=([^;]+)/)[1]
+        }
+        authManager.setCookies(cookieObject);
     } catch (error) {
         throw new Error("Error fetching cookies: " + error);
     }

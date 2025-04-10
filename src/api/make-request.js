@@ -19,7 +19,7 @@ export const authorizedRequest = async ({method, url, oldUrl = null , data = nul
         };
         if (search) {
             const cookies = authManager.getCookies();
-            headers["Cookie"] = cookies;
+            headers["Cookie"] = `refresh_token_web=${cookies.refresh}; access_token_web=${cookies.access}`;
             headers["Referer"] = oldUrl;
             headers["Origin"] = oldUrl;
             headers["X-Anon-Id"] = xAnonId;

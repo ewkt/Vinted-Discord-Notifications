@@ -14,7 +14,6 @@ class authenticationManager {
         this.cookies = JSON.parse(fs.readFileSync(this.cookiesPath, 'utf-8'));
         this.refreshInProgress = null;
         this.xAnonId = null;
-        this.cookies = null;
     }
 
     //updates the tokens with double-check locking
