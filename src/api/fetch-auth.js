@@ -7,7 +7,7 @@ export const fetchCookies = async () => {
         const response = await authorizedRequest({
             method: "GET", 
             url: process.env.BASE_URL+"/how_it_works",
-            search: true
+            refresh: true
         });
         
         const xAnonId = response.headers.get('x-anon-id') || null;

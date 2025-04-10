@@ -5,7 +5,7 @@ const ua = authManager.getUserAgent();
 const xAnonId = authManager.getXAnonId();
 
 //general fucntion to make an authorized request
-export const authorizedRequest = async ({method, url, oldUrl = null , data = null, auth = false, search = false, logs = true} = {}) => {
+export const authorizedRequest = async ({method, url, oldUrl = null , data = null, auth = false, search = false, refresh = false, logs = true} = {}) => {
     try {
         const headers = {
             "User-Agent": ua,
@@ -17,14 +17,18 @@ export const authorizedRequest = async ({method, url, oldUrl = null , data = nul
             "Sec-Fetch-Site": "same-origin",
             "TE": "Trailers",
         };
-        if (search) {
+        if (search) { //cookies from cookies.json
             const cookies = authManager.getCookies();
             headers["Cookie"] = `refresh_token_web=${cookies.refresh}; access_token_web=${cookies.access}`;
             headers["Referer"] = oldUrl;
             headers["Origin"] = oldUrl;
             headers["X-Anon-Id"] = xAnonId;
         }
-        if (auth) {
+        if (refresh) { //init headers for the first request & refreshes
+            const cookies = authManager.getCookies();
+            headers["Cookie"] = `refresh_token_web=${cookies.refresh}; access_token_web=${cookies.access}`;
+        }
+        if (auth) { //cookies from tokens.json
             const tokens = authManager.getTokens();
             headers["Authorization"] = `Bearer ${tokens.access_token}`;
             headers["Cookie"] = `refresh_token_web=${tokens.refresh_token}; access_token_web=${tokens.access_token}`;
