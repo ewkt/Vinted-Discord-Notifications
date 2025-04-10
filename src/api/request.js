@@ -39,7 +39,7 @@ export const authorizedRequest = async ({method, url, oldUrl = null , data = nul
             response = await fetch(newUrl, options);
         }
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP status: ${response.status}`);
         }
         if (response.headers.get('Content-Type')?.includes('text/html')) {
             return response;
