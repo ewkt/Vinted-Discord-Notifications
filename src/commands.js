@@ -29,7 +29,7 @@ export const registerCommands = async (client) => {
         );
         console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
-        console.error('Error reloading commands:', error);
+        console.error('\nError reloading commands:', error);
     }
 }
 
@@ -41,7 +41,7 @@ export const handleCommands = async (interaction, mySearches) => {
         const module = await import(`./commands/${interaction.commandName}.js`);
         await module.execute(interaction, mySearches);
     } catch (error) {
-        console.error('Error handling command:', error);
+        console.error('\nError handling command:', error);
         await interaction.followUp({ content: 'There was an error while executing this command!' });
     }
 }
