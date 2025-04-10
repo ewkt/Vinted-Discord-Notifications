@@ -1,7 +1,7 @@
 {
-  "user_agent": "xxxxxxxxx",
-  "access_token": "xxxxxxx",
-  "refresh_token": "xxxxxxxx",
-  "latitude": 1.313,
-  "longitude": 1.313
+  "user_agent": "Mozilla....",
+  "access_token": "eyJ...",
+  "refresh_token": "eyJ...",
+  "latitude":1.1313,
+  "longitude":1.1313
 }

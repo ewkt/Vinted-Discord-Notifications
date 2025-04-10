@@ -13,13 +13,13 @@ It's a feature that is truly missed in the Vinted app, you will never miss a goo
 If you want to use autobuy you will need to clone this branch, then add your session tokens to `autobuy.json`. You will also need to add your home address latitude and longitude for the automatic selection of the pickup point. Google your User Agent and paste it in the config too.
 ```
 {
-  "access_token": "xxxxxxxx",
-  "refresh_token": "xxxxxxx",
-  "user_agent": "xxxxxxxxx",
-  "latitude":"",
-  "longitude":""
+  "user_agent": "Mozilla....",
+  "access_token": "eyJ...",
+  "refresh_token": "eyJ...",
+  "latitude":1.1313,
+  "longitude":1.1313
 }
 ```
-(you need to get the tokens from your browsers network tab by capturing the login, if you need help you can follow [this video tutorial](https://dai.ly/k8WySk1UDMB69UBu31Y))
+You need to get the tokens from your browser storage, AFTER having logged-in with the account you want to use for your purchases
 
 Don't hesitate to contact me on discord (@thewwk) or open an issue here if you have any concerns or requests!
