@@ -1,12 +1,12 @@
 # Vinted Discord Notifications
 
-This project allows you to host your own bot on your discord server, and recieve notifications for your favorite vinted searches.
+This project allows you to host your own bot on your discord server, and receive notifications for your favorite vinted searches.
 
-It's a feature that is truly missed in the vinted app, you will never miss a good deal again!
+It's a feature that is truly missed in the Vinted app, you will never miss a good deal again!
 
 > [!WARNING]
->  Vinted blocks requests to their API when they are too frequent, try not to go over 1 request per second. Think of this bot as somone refreshing the results page on vinted constantly for you
-> __for eaxmple if you have 10 different searches, you should probably configre them to be refreshed every 10 seconds to avoid having issues with vinted__
+>  Vinted blocks requests to their API when they are too frequent, try not to go over 1 request per second. (Think of this bot as somone refreshing the results page on vinted constantly for you)
+> _for example if you have 10 different searches, you should probably configure them to be refreshed every 10 seconds to avoid having issues with vinted_
 
 ## Set-up Autobuy
 

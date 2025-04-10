@@ -3,7 +3,7 @@ import { tokenManager } from './tokens.js';
 
 const ua = tokenManager.userAgent();
 
-//general fucntion to make an authorized request
+//general function to make an authorized request
 export const authorizedRequest = async ({method, url, oldUrl = null , data = null, tokens = null, cookies = null, logs = true} = {}) => {
     try {
         const headers = {

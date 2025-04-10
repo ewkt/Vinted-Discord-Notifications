@@ -36,13 +36,11 @@ export const vintedSearch = async (channel, cookie, processedArticleIds) => {
 const selectNewArticles = (articles, processedArticleIds, channel) => {
     const items = Array.isArray(articles.items) ? articles.items : [];
     const titleBlacklist = Array.isArray(channel.titleBlacklist) ? channel.titleBlacklist : [];
-    const userBlacklist = Array.isArray(channel.userBlacklist) ? channel.userBlacklist : [];
-    const filteredArticles = items.filter(({ photo, id, title, user }) => 
-      photo && 
-      photo.high_resolution.timestamp * 1000 >  Date.now() - (1000 * 60 * 60) && 
+    const filteredArticles = items.filter(({ photo, id, title, user }) =>
+      photo &&
+      photo.high_resolution.timestamp * 1000 >  Date.now() - (1000 * 60 * 60) &&
       !processedArticleIds.has(id) &&
-      !titleBlacklist.some(word => title.toLowerCase().includes(word)) &&
-      !userBlacklist.some(word => user.login.toLowerCase().includes(word))
+      !titleBlacklist.some(word => title.toLowerCase().includes(word))
     );
     return filteredArticles;
   };
