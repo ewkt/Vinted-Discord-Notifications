@@ -35,8 +35,7 @@ const selectNewArticles = (articles, processedArticleIds, channel) => {
       photo && 
       photo.high_resolution.timestamp * 1000 >  Date.now() - (1000 * 60 * 10) && 
       !processedArticleIds.has(id) &&
-      !titleBlacklist.some(word => title.toLowerCase().includes(word)) &&
-      !userBlacklist.some(word => user.login.toLowerCase().includes(word))
+      !titleBlacklist.some(word => title.toLowerCase().includes(word))
     );
     return filteredArticles;
   };
