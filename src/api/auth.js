@@ -6,7 +6,7 @@ export const fetchCookie = async () => {
     console.log('fetching cookies');
     const response = await authorizedRequest({
         method: "GET", 
-        url: process.env.BASE_URL+"how_it_works", 
+        url: process.env.BASE_URL+"/how_it_works", 
     });
 
     const sessionCookies = response.headers.get('set-cookie');
@@ -39,7 +39,7 @@ export const newToken = async (tokens) => {
     try {
         const refreshed = await authorizedRequest({
             method: "POST", 
-            url: process.env.BASE_URL+"web/api/auth/refresh", 
+            url: process.env.BASE_URL+"/web/api/auth/refresh", 
             data: body, 
             tokens: tokens
         });
@@ -58,7 +58,7 @@ export const getCsrf = async (tokens) => {
     console.log('fetching CSRF');
     const response = await authorizedRequest({
         method: "GET", 
-        url: process.env.BASE_URL+"inbox", 
+        url: process.env.BASE_URL+"/inbox", 
         tokens: tokens, 
     });
 

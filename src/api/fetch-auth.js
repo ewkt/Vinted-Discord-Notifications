@@ -7,7 +7,7 @@ export const fetchCookies = async () => {
     try{
         const response = await authorizedRequest({
             method: "GET", 
-            url: process.env.BASE_URL+"how_it_works",
+            url: process.env.BASE_URL+"/how_it_works",
             search: true
         });
         
@@ -41,7 +41,7 @@ export const fetchTokens = async (tokens) => {
     try {
         const responseData = await authorizedRequest({
             method: "POST", 
-            url: process.env.BASE_URL+"web/api/auth/refresh", 
+            url: process.env.BASE_URL+"/web/api/auth/refresh", 
             data: body, 
             auth: true
         });

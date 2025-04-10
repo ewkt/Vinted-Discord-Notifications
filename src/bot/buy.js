@@ -15,7 +15,7 @@ const getTransactionId = async (itemId, sellerId) => {
         };
         const responseData = await authorizedRequest({
             method: "POST",
-            url: process.env.BASE_URL+"api/v2/conversations", 
+            url: process.env.BASE_URL+"/api/v2/conversations", 
             data: data, 
             auth: true 
         });
@@ -35,7 +35,7 @@ const payItem = async (interaction, itemId, transactionId, conversationId) => {
         const countryCode = url.hostname.split('.').pop().toUpperCase();
         let responseData = await authorizedRequest({
             method: "GET", 
-            url: `${process.env.BASE_URL}api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=${countryCode}&latitude=${geo.latitude}&longitude=${geo.longitude}&should_label_nearest_points=true`,
+            url: process.env.BASE_URL+`/api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=${countryCode}&latitude=${geo.latitude}&longitude=${geo.longitude}&should_label_nearest_points=true`,
             auth: true
         });
 
@@ -74,7 +74,7 @@ const payItem = async (interaction, itemId, transactionId, conversationId) => {
         console.log('checking out')
         responseData = await authorizedRequest({
             method: "PUT",
-            url: process.env.BASE_URL+`api/v2/transactions/${transactionId}/checkout`,
+            url: process.env.BASE_URL+`/api/v2/transactions/${transactionId}/checkout`,
             data: data_shipping, 
             auth: true
         });
@@ -95,7 +95,7 @@ const payItem = async (interaction, itemId, transactionId, conversationId) => {
         //pay for the item
         responseData = await authorizedRequest({
             method: "POST", 
-            url: process.env.BASE_URL+`api/v2/transactions/${transactionId}/checkout/payment`, 
+            url: process.env.BASE_URL+`/api/v2/transactions/${transactionId}/checkout/payment`, 
             data: data_payment, 
             auth: true
         });
