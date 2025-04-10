@@ -48,7 +48,7 @@ export const authorizedRequest = async ({method, url, oldUrl = null , data = nul
             response = await fetch(newUrl, options);
         }
         if (!response.ok) {
-            throw new Error(`HTTP status: ${response.status}`);
+            throw `HTTP status: ${response.status}`;
         }
         if (response.headers.get('Content-Type')?.includes('text/html')) {
             return response;
@@ -60,6 +60,6 @@ export const authorizedRequest = async ({method, url, oldUrl = null , data = nul
         const responseData = await response.json();
         return responseData;
     } catch (error) {
-        throw new Error("while making request: " + error);
+        throw "While making request: " + error;
     }
 };

@@ -23,7 +23,7 @@ const getTransactionId = async (itemId, sellerId) => {
         const convId = responseData.conversation.id
         return [id, convId];
     } catch(error){
-        throw new Error("while getting transaction id: " + error);
+        throw "While getting transaction id: " + error;
     }
   }
 
@@ -114,7 +114,7 @@ const payItem = async (interaction, itemId, transactionId, conversationId) => {
             console.log("Payment failed");
         }
     } catch(error) {
-        throw new Error("while during payment: " + error);
+        throw "During payment: " + error;
     }
 }
 
