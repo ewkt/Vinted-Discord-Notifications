@@ -31,6 +31,7 @@ export const fetchCookies = async () => {
                 access: cookieHeader.match(/access_token_web=([^;]+)/)[1]
             }
             authManager.setCookies(cookieObject);
+            await authManager.saveCookies();
         }
     } catch (error) {
         throw "While fetching cookies: " + error;

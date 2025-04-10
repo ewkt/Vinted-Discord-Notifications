@@ -38,10 +38,10 @@ class authenticationManager {
 
     //updates token values from set-cookie headers returned by authorized requests
     async updateFromResponseHeaders(headers) {
-        const setCookie = headers.raw()['set-cookie'].join('; ');
-        if (setCookie && setCookie.length > 0) {
-            const access_token = setCookie.match(/access_token_web=([^;]+)/);
-            const refresh_token = setCookie.match(/refresh_token_web=([^;]+)/);
+        const cookieHeader = headers.raw()['set-cookie'].join('; ');
+        if (cookieHeader && cookieHeader.length > 0) {
+            const access_token = cookieHeader.match(/access_token_web=([^;]+)/);
+            const refresh_token = cookieHeader.match(/refresh_token_web=([^;]+)/);
             if (access_token && refresh_token && !this.refreshInProgress) {
                 this.setTokens({newAccess: access_token, newRefresh: refresh_token});
                 console.log("auto-updated tokens from headers");
@@ -55,6 +55,15 @@ class authenticationManager {
             await fs.promises.writeFile(this.tokensPath, JSON.stringify(this.tokens, null, 2));
         } catch (error) {
             console.error("\nError saving tokens:", error);
+        }
+    }
+
+    //saves current cookies to disk asynchronously.
+    async saveCookies() {
+        try {
+            await fs.promises.writeFile(this.cookiesPath, JSON.stringify(this.cookies, null, 2));
+        } catch (error) {
+            console.error("\nError saving cookies:", error);
         }
     }
 
