@@ -38,8 +38,8 @@ export const run = async (client, mySearches) => {
             } catch (err) {
                 console.error('\nError in initializing articles:', err);
             }
-            await runInterval(client, processedArticleIds, channel);
-        }, index*1000);
+            setTimeout(() => {runInterval(client, processedArticleIds, channel);}, 1000);
+        }, index * 1000);
     });
 
     //fetch new cookies and clean ProcessedArticleIDs at interval    
