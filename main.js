@@ -1,6 +1,6 @@
-import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import { Client, GatewayIntentBits } from 'discord.js';
 
 import { run } from "./src/run.js";
 import { autobuy } from "./src/bot/buy.js";
