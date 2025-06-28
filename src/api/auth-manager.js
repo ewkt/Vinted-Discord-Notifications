@@ -3,7 +3,6 @@ import path from 'path';
 
 import { fetchTokens } from './fetch-auth.js';
 import { fileURLToPath } from 'url';
-import path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,24 +29,10 @@ class authenticationManager {
 
             this.refreshInProgress = true;
             await fetchTokens(this.tokens);
-            await this.saveTokens();
         } catch (error) {
             console.error("\nError while refreshing tokens:", error);
         } finally {
             this.refreshInProgress = null;
-        }
-    }
-
-    //updates token values from set-cookie headers returned by authorized requests
-    async updateFromResponseHeaders(headers) {
-        const cookieHeader = headers.raw()['set-cookie'].join('; ');
-        if (cookieHeader && cookieHeader.length > 0) {
-            const access_token = cookieHeader.match(/access_token_web=([^;]+)/);
-            const refresh_token = cookieHeader.match(/refresh_token_web=([^;]+)/);
-            if (access_token && refresh_token && !this.refreshInProgress) {
-                this.setTokens({newAccess: access_token, newRefresh: refresh_token});
-                console.log("auto-updated tokens from headers");
-            }
         }
     }
 
@@ -73,16 +58,14 @@ class authenticationManager {
         this.xAnonId = xAnonId;
     }
 
-    setCookies(cookies) {
+    async setCookies(cookies) {
         this.cookies = cookies;
+        await this.saveCookies();
     }
 
-    setTokens({newAccess, newRefresh, newExpiry = null}) {
-        this.tokens.access_token = newAccess;
-        this.tokens.refresh_token = newRefresh;
-        if (newExpiry) {
-            this.tokens.expiry = newExpiry;
-        }
+    async setTokens(newTokens) {
+        this.tokens = { ...this.tokens, ...newTokens };
+        await this.saveTokens();
     }
 
     getXAnonId() {
@@ -90,11 +73,21 @@ class authenticationManager {
     }
 
     getTokens() {
-        return this.tokens;
+        const tokenMapping = {
+            access_token_web: this.tokens.access_token_web,
+            refresh_token_web: this.tokens.refresh_token_web,
+            _vinted_fr_session: this.tokens._vinted_fr_session,
+        };
+        return tokenMapping;
     }
 
     getCookies() {
-        return this.cookies;
+        const cookieMapping = {
+            refresh_token_web: this.cookies.refresh,
+            access_token_web: this.cookies.access,
+            _vinted_fr_session: this.cookies.vinted,
+        };
+        return cookieMapping;
     }
 
     getUserAgent() {
