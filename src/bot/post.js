@@ -45,13 +45,19 @@ export async function postArticles(newArticles, channelToSend) {
 
         return channelToSend.send({
             embeds: [{
-                title: item.title+"  ("+item.price.amount+"€)  "+item.size_title,
+                title: `${item.title.substring(0, 25)} (${item.price.amount}€) ${item.size_title}`,
                 url: item.url,
-                fields: [{
-                    name: "\u200B",
-                    value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price.amount}€  (${cleanDelay})\`\`\`` || "Aucun",
-                    inline: true,
-                }],
+                fields: [
+                    {
+                        name: "\u200B",
+                        value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price.amount}€  (${cleanDelay})\`\`\``,
+                        inline: true,
+                    },
+                    {
+                        name: "\u200B",
+                        value: `\`\`\`YAML\n ${item.title} \`\`\``,
+                    },
+                ],
                 image: { url: item.photo?.url },
                 footer: {text: item.user.id+"-"+item.id},
                 timestamp,
@@ -79,10 +85,17 @@ export async function purchaseMessage(interaction, purchaseInfo) {
             title: "Purchase details",
             url : link,
             fields: [
-                { name: "Point", value: (purchaseInfo.pointName || "N/A").toString() },
-                { name: "Address", value: (purchaseInfo.pointAddress || "N/A").toString() },
-                { name: "Carrier", value: (purchaseInfo.carrier || "N/A").toString() },
+                { 
+                    name: "\u200B", 
+                    value: `\`\`\`YAML\n ${purchaseInfo.title} - ${purchaseInfo.price}\`\`\``,
+                },
+                { 
+                    name: "\u200B", 
+                    value: `\`\`\`YAML\n ${purchaseInfo.pointName} (${purchaseInfo.carrier}) - ${purchaseInfo.pointAddress}\`\`\``
+                
+                },
             ],
+            image: { url: purchaseInfo?.photoUrl || "" },
             color: parseInt("09b1ba", 16),
         }],
         components: [dmButton]
