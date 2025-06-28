@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 
 import { authManager } from './auth-manager.js';
-import { updateFromResponseHeaders } from './fetch-auth.js';
 
 //general fucntion to make an authorized request
 export const authorizedRequest = async ({
@@ -60,9 +59,6 @@ export const authorizedRequest = async ({
         if (response.headers.get('Content-Type')?.includes('text/html')) {
             console.warn("Response is HTML")
             return response.headers;
-        }
-        if (auth) {
-            await updateFromResponseHeaders(response.headers);
         }
 
         return await response.json();

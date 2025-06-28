@@ -11,10 +11,6 @@ const components = [
         .setLabel("Message")
         .setEmoji("🪐")
         .setStyle(ButtonStyle.Link),
-    new ButtonBuilder()
-        .setCustomId("autobuy")
-        .setLabel("Autobuy")
-        .setStyle(ButtonStyle.Success),
     ]),
 ];
 
