@@ -86,7 +86,7 @@ export const execute = async (interaction) => {
         try{
             fs.writeFileSync(filePath, JSON.stringify(searches, null, 2));
         } catch (error) {
-            console.error('Error starting monitoring:', error);
+            console.error('\nError saving new search:', error);
             await interaction.followUp({ content: 'There was an error starting the monitoring.'});
         }
 

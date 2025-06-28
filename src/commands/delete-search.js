@@ -41,7 +41,7 @@ export const execute = async (interaction) => {
         await interaction.followUp({ embeds: [embed] });
 
     } catch (error) {
-        console.error('Error deleting the search:', error);
+        console.error('\nError deleting the search:', error);
         await interaction.followUp({ content: 'There was an error deleting the search.'});
     }
 }
