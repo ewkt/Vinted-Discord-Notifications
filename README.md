@@ -5,8 +5,7 @@ This project allows you to host your own bot on your discord server, and receive
 It's a feature that is truly missed in the Vinted app, you will never miss a good deal again!
 
 > [!WARNING]
->  Vinted blocks requests to their API when they are too frequent, try not to go over 1 request per second. (Think of this bot as somone refreshing the results page on vinted constantly for you)
-> _for example if you have 10 different searches, you should probably configure them to be refreshed every 10 seconds to avoid having issues with vinted_
+>  VInted uses Cloudflare to protect its API from scraping. a single IP is only allowed a limited number of calls before being blocked for 24h. If you want to have this bot running 24/7 you should consider adding rotating proxies.
 
 ## Set-up Autobuy
 
