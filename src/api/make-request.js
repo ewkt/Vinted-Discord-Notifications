@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+
 import { authManager } from './auth-manager.js';
 
 const ua = authManager.getUserAgent();

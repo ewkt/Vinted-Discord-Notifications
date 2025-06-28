@@ -1,4 +1,6 @@
 import fs from 'fs';
+import path from 'path';
+
 import { fetchTokens } from './fetch-auth.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
