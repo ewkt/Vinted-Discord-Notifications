@@ -5,113 +5,163 @@ import { purchaseMessage } from "./post.js";
 const geo = authManager.getGeoLocation();
 
 //convert itemid to transactionid
-const getTransactionId = async (itemId, sellerId) => {
+const getTransactionIds = async (itemId, sellerId) => {
     console.log("getting transaction id");
     try {
         const data = {
-            "initiator": "buy",
+            "initiator": "ask_seller",
             "item_id": itemId,
             "opposite_user_id": sellerId
-        };
+        };   
+
         const responseData = await authorizedRequest({
             method: "POST",
             url: process.env.BASE_URL+"/api/v2/conversations", 
             data: data, 
+            auth: true,
+            oldUrl: process.env.BASE_URL+"/items/"+itemId+"?referrer=catalog",
+        });
+
+        const dataBuild = {
+            "purchase_items": [
+                {
+                    "id": responseData.conversation.transaction.id,
+                    "type": "transaction",
+                }
+            ],
+        };
+
+        const responseDataBuild = await authorizedRequest({
+            method: "POST",
+            url: process.env.BASE_URL+"/api/v2/purchases/checkout/build", 
+            data: dataBuild, 
             auth: true 
         });
-        const id = responseData.conversation.transaction.id
-        const convId = responseData.conversation.id
-        return [id, convId];
+
+        const ids = {
+            transactionId: responseData.conversation.transaction.id,
+            convId: responseData.conversation.id,
+            shippingId: responseData.conversation.transaction.shipping_order_id,
+            checkoutId: responseDataBuild.checkout.id,
+            itemId: itemId,
+            conversationId: responseData.conversation.id,
+            photoUrl: responseData.conversation.transaction.item_photo.url,
+            title: responseData.conversation.transaction.item_title,
+        };
+
+        return ids;
     } catch(error){
         throw "While getting transaction id: " + error;
     }
-  }
+}
 
-//pipeline to pay for item
-const payItem = async (interaction, itemId, transactionId, conversationId) => {
-    try {
+//let user choose closest shipping point
+const selectShipping = async (ids) => {
+    try{
         console.log('selecting shipping point')
         const url = new URL(process.env.BASE_URL);
         const countryCode = url.hostname.split('.').pop().toUpperCase();
-        let responseData = await authorizedRequest({
+        const responseDataShip = await authorizedRequest({
             method: "GET", 
-            url: process.env.BASE_URL+`/api/v2/transactions/${transactionId}/nearby_shipping_options?country_code=${countryCode}&latitude=${geo.latitude}&longitude=${geo.longitude}&should_label_nearest_points=true`,
+            url: process.env.BASE_URL+`/api/v2/shipping_orders/${ids.shippingId}/nearby_pickup_points?country_code=${countryCode}&latitude=${geo.latitude}&longitude=${geo.longitude}`,
             auth: true
         });
 
-        const shipOps = responseData.nearby_shipping_options;
-        const shipPts = responseData.nearby_shipping_points;
+        const shipOps = responseDataShip.nearby_shipping_options;
+        const shipPts = responseDataShip.nearby_shipping_points;
         
         //select closest shipping point and get corresponding carrier id
         const point_id = 0;
         let carrier_id = -1;
         for (let k = 0; k < shipOps.length; k++) {
-            if (shipPts[point_id].point.carrier_id == shipOps[k].carrier_id) {
+            if (shipPts[point_id].point.carrier_code == shipOps[k].carrier_code) {
                 carrier_id = k;
                 break;
             }
         }
         const data_shipping = {
-            "transaction": {
-                "shipment": {
-                    "package_type_id": shipOps[carrier_id].id,
-                    "pickup_point_code": shipPts[point_id].point.code,
-                    "point_uuid": shipPts[point_id].point.uuid,
-                    "rate_uuid": shipOps[carrier_id].rate_uuid,
-                    "root_rate_uuid": shipOps[carrier_id].root_rate_uuid
-                }
+            components:{
+                additional_service: {},
+                payment_method: {},
+                shipping: {
+                    package_type_id: shipOps[carrier_id].package_type_id,
+                    point_code: shipPts[point_id].point.code,
+                    point_uuid: shipPts[point_id].point.uuid,
+                    rate_uuid: shipOps[carrier_id].rate_uuid,
+                },
+                shipping_address: {}
             }
-        };
-        const purchaseInfo = {
-            pointName: shipPts[point_id].point.name,
-            pointAddress: shipPts[point_id].point.address_line_1,
-            carrier: shipOps[carrier_id].carrier_code,
-            itemId: itemId,
-            conversationId: conversationId
-        }
-
-        //checkout the item and get the checksum
+        } 
+        //checkout the item with selected point and get the checksum
         console.log('checking out')
-        responseData = await authorizedRequest({
+        const responseData = await authorizedRequest({
             method: "PUT",
-            url: process.env.BASE_URL+`/api/v2/transactions/${transactionId}/checkout`,
+            url: process.env.BASE_URL+`/api/v2/purchases/${ids.checkoutId}/checkout`,
             data: data_shipping, 
             auth: true
         });
+        
+        const priceDetail = responseData.checkout.components.order_summary_v2.subtotal.price;
+        const purchaseInfo = {
+            pointName: shipPts[point_id].point.name,
+            pointAddress: shipPts[point_id].point.address_line1,
+            carrier: shipOps[carrier_id].carrier_code,
+            checksum: responseData.checkout.checksum,
+            price: priceDetail.amount + priceDetail.currency_code,
+            photoUrl: ids.photoUrl,
+            title: ids.title,
+            checkoutId: ids.checkoutId,
+            itemId: ids.itemId,
+            conversationId: ids.conversationId,
+        }
 
+        return purchaseInfo;
+    } catch (error) {
+        throw "While selecting shipping point: " + error;
+    }
+};
+
+//pipeline to pay for item
+const payItem = async (interaction, purchaseInfo) => {
+    try {
         console.log('buying item')
         const data_payment = {
-            "browser_attributes": {
-                "color_depth": 24,
-                "java_enabled": false,
-                "language": "en-US",
-                "screen_height": 800,
-                "screen_width": 1600,
-                "timezone_offset": -120
-            },
-            "checksum":responseData.checkout.checksum
+            "checksum":purchaseInfo.checksum,
+            "payment_options":{
+                "browser_info": {
+                    "color_depth": 24,
+                    "java_enabled": false,
+                    "language": "en-US",
+                    "screen_height": 800,
+                    "screen_width": 1600,
+                    "timezone_offset": -120
+                },
+            }
         };
 
         //pay for the item
-        responseData = await authorizedRequest({
+        const responseData = await authorizedRequest({
             method: "POST", 
-            url: process.env.BASE_URL+`/api/v2/transactions/${transactionId}/checkout/payment`, 
+            url: process.env.BASE_URL+`/api/v2/purchases/${purchaseInfo.checkoutId}/checkout/payment`, 
             data: data_payment, 
             auth: true
         });
         
-        if (responseData.debit_status == 40){
+        if (responseData.payment.status == "success"){
             console.log("payment successful");
             await interaction.editReply('Purchase succesful!');
             await purchaseMessage(interaction, purchaseInfo);
-        } else if (responseData.debit_status == 20) {
+        } else if (responseData.payment.status == "pending") {
             console.log("waiting for 3DS");
-            const redirectUrl = responseData.pay_in_redirect_url;
+            const redirectUrl = responseData.action.parameters.url;
             await interaction.editReply('Waiting for 3DS confirmation', {embeds: [{title: 'Confirm payment', url: redirectUrl}]});
             await purchaseMessage(interaction, purchaseInfo);
         }
-        else {
+        else if (responseData.payment.status == "failed") {
             console.log("Payment failed");
+        }
+        else {
+            console.log("Payment status: " + responseData.payment.status);
         }
     } catch(error) {
         throw "During payment: " + error;
@@ -124,14 +174,14 @@ export const autobuy = async (interaction, itemId, sellerId) => {
     //step1: check and refresh tokens if needed
     await authManager.refreshTokens();
     try {
-        //step2: get the transaction id
-        const [transactionId, conversationId] = await getTransactionId(itemId, sellerId);
-        if (transactionId) {
-            //step3: pay for the item
-            await payItem(interaction, itemId, transactionId, conversationId);
-        }
+        //step2: get the required ids
+        const ids = await getTransactionIds(itemId, sellerId);
+        //step3: select shipping point
+        const purchaseInfo = await selectShipping(ids);
+        //step4: pay for the item
+        await payItem(interaction, purchaseInfo);
     } catch (error) {
         console.error("\nError during autobuy:", error);
-        interaction.reply('error');
+        interaction.editReply('Purchase failed');
     }
 }
