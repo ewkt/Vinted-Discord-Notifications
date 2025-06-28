@@ -3,21 +3,17 @@ import fetch from 'node-fetch';
 import { authManager } from './auth-manager.js';
 import { updateFromResponseHeaders } from './fetch-auth.js';
 
-const ua = authManager.getUserAgent();
-
 //general fucntion to make an authorized request
 export const authorizedRequest = async ({
     method, 
     url, 
     oldUrl = null,
-    data = null,
-    auth = false,
     search = false,
     logs = true
 } = {}) => {
     try {
         const headers = {
-            "User-Agent": ua,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome",
             "Host": new URL(url).host,
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Connection": "keep-alive",
@@ -66,10 +62,6 @@ export const authorizedRequest = async ({
             "method": method,
             "headers": headers,
         };
-
-        if (method !== 'GET' && method !== 'HEAD') {
-            options.body = JSON.stringify(data);
-        }
         if (oldUrl) {
             options.headers["Referer"] = oldUrl;
         }
