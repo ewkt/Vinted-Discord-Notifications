@@ -35,25 +35,6 @@ export const authorizedRequest = async ({
             headers["Sec-Fetch-Site"] = "cross-site";
             headers["Upgrade-Insecure-Requests"] = "1";
         }
-        if (auth) { //cookies from tokens.json
-            const tokens = authManager.getTokens();
-            headers["Authorization"] = `Bearer ${tokens.access_token_web}`;
-            headers["Cookie"] = Object.entries(tokens)
-                .filter(([, value]) => value)
-                .map(([key, value]) => `${key}=${value}`)
-                .join('; ');
-            headers["X-CSRF-Token"] = "75f6c9fa-dc8e-4e52-a000-e09dd4084b3e"; //static token
-            headers["Accept"] = "application/json, text/plain, */*";
-            headers["Accept-Language"] = "en-fr";
-            headers["Content-Type"] = "application/json";
-            headers["X-Anon-Id"] = "79ed4b98-4a4d-4d95-83a8-4aaeba47b63b"; //static token
-            headers["Origin"] = process.env.BASE_URL;
-            headers["Sec-GPC"] = "1";
-            headers["Sec-Fetch-Dest"] = "empty";
-            headers["Sec-Fetch-Mode"] = "cors";
-            headers["Sec-Fetch-Site"] = "same-origin";
-            headers["Priority"] = "u=0";
-        }
         if (logs) {
             console.log("making an authed request to " + url);
         }

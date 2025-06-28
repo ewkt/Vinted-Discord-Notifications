@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import { Client, GatewayIntentBits } from 'discord.js';
 
 import { run } from "./src/run.js";
-import { autobuy } from "./src/bot/buy.js";
 import { registerCommands, handleCommands } from "./src/commands.js";
 
 const mySearches = JSON.parse(fs.readFileSync('./config/channels.json', 'utf8'));
@@ -23,10 +22,7 @@ client.on("ready", async () => {
 
 //listen to buy button clicks
 client.on('interactionCreate', async (interaction) => {
-    if (interaction.customId == 'autobuy') {
-        const [sellerId, itemId] = interaction.message.embeds[0].footer.text.split('-');
-        autobuy(interaction, itemId, sellerId);
-    } else if (interaction.isCommand()) {
+    if (interaction.isCommand()) {
         handleCommands(interaction, mySearches);
     } else {
         console.log('Unknown interaction type');

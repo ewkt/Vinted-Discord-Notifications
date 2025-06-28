@@ -30,8 +30,7 @@ export const vintedSearch = async (channel, processedArticleIds) => {
 const selectNewArticles = (articles, processedArticleIds, channel) => {
     const items = Array.isArray(articles.items) ? articles.items : [];
     const titleBlacklist = Array.isArray(channel.titleBlacklist) ? channel.titleBlacklist : [];
-    const userBlacklist = Array.isArray(channel.userBlacklist) ? channel.userBlacklist : [];
-    const filteredArticles = items.filter(({ photo, id, title, user }) => 
+    const filteredArticles = items.filter(({ photo, id, title }) => 
       photo && 
       photo.high_resolution.timestamp * 1000 >  Date.now() - (1000 * 60 * 10) && 
       !processedArticleIds.has(id) &&

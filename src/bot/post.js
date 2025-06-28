@@ -68,36 +68,3 @@ export async function postArticles(newArticles, channelToSend) {
     });
     await Promise.all(messages);
 }
-
-//send the user a private message with the purchase details
-export async function purchaseMessage(interaction, purchaseInfo) {
-    const link = `${process.env.BASE_URL}/items/${purchaseInfo.itemId}`;
-    const dmButton = new ActionRowBuilder().addComponents([
-        new ButtonBuilder()
-            .setLabel("Message")
-            .setEmoji("🪐")
-            .setStyle(ButtonStyle.Link)
-            .setURL(`${process.env.BASE_URL}/inbox/${purchaseInfo.conversationId}`),
-    ]);
-    await interaction.user.send({
-        content: link,
-        embeds: [{
-            title: "Purchase details",
-            url : link,
-            fields: [
-                { 
-                    name: "\u200B", 
-                    value: `\`\`\`YAML\n ${purchaseInfo.title} - ${purchaseInfo.price}\`\`\``,
-                },
-                { 
-                    name: "\u200B", 
-                    value: `\`\`\`YAML\n ${purchaseInfo.pointName} (${purchaseInfo.carrier}) - ${purchaseInfo.pointAddress}\`\`\``
-                
-                },
-            ],
-            image: { url: purchaseInfo?.photoUrl || "" },
-            color: parseInt("09b1ba", 16),
-        }],
-        components: [dmButton]
-    });
-}
