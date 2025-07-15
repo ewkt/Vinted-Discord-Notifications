@@ -7,9 +7,10 @@
     "type": "module",
     "dependencies": {
         "discord.js": "^14.15.2",
-        "fs": "^0.0.1-security",
-        "node-fetch": "^3.2.10",
         "dotenv": "^16.4.5",
+        "fs": "^0.0.1-security",
+        "install": "^0.13.0",
+        "node-fetch": "^3.2.10",
         "user-agents": "^1.0.1133"
     }
 }
