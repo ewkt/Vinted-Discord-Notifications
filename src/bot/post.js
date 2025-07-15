@@ -36,19 +36,26 @@ export async function postArticles(newArticles, channelToSend) {
         const delayInSeconds = Math.abs((Date.now() - item.photo.high_resolution.timestamp * 1000));
         const cleanDelay = await cleanTime(delayInSeconds);
         //set button urls
-        components[0].components[0].setURL(`https://www.vinted.fr/items/${item.id}`);
-        components[0].components[1].setURL(`https://www.vinted.fr/items/${item.id}/want_it/new?`);
+        components[0].components[0].setURL(`${process.env.BASE_URL}/items/${item.id}`);
+        components[0].components[1].setURL(`${process.env.BASE_URL}/items/${item.id}/want_it/new?`);
 
         return channelToSend.send({
             embeds: [{
-                title: item.title+"  ("+item.price.amount+"€)  "+item.size_title,
+                title: `${item.title.substring(0, 25)} (${item.price.amount}€) ${item.size_title}`,
                 url: item.url,
-                fields: [{
-                    name: "\u200B",
-                    value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price.amount}€  (${cleanDelay})\`\`\`` || "Aucun",
-                    inline: true,
-                }],
+                fields: [
+                    {
+                        name: "\u200B",
+                        value: `\`\`\`YAML\n Size: ${item.size_title} - ${item.price.amount}€  (${cleanDelay})\`\`\``,
+                        inline: true,
+                    },
+                    {
+                        name: "\u200B",
+                        value: `\`\`\`YAML\n ${item.title} \`\`\``,
+                    },
+                ],
                 image: { url: item.photo?.url },
+                footer: {text: item.user.id+"-"+item.id},
                 timestamp,
                 color: parseInt("09b1ba", 16),
             }],
