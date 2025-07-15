@@ -10,9 +10,8 @@ dotenv.config();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-// Default country settings (in case selection fails)
-let BASE_URL = countrySettings["France"].url;
-let BASE_CURRENCY = countrySettings["France"].currency;
+//connect the bot to the server
+client.login(process.env.BOT_TOKEN);
 
 //launch the bot
 client.on("ready", async () => {
@@ -21,14 +20,11 @@ client.on("ready", async () => {
     run(client, mySearches);
 });
 
-rl.question(`Select a country (${Object.keys(countrySettings).join(', ')}): `, (userCountry) => {
-    userCountry = userCountry.trim();
-
-    // Validate user input
-    if (countrySettings[userCountry]) {
-        BASE_URL = countrySettings[userCountry].url;
-        BASE_CURRENCY = countrySettings[userCountry].currency;
+//listen to buy button clicks
+client.on('interactionCreate', async (interaction) => {
+    if (interaction.isCommand()) {
+        handleCommands(interaction, mySearches);
     } else {
-        console.log("Invalid country. Defaulting to France.");
+        console.log('Unknown interaction type');
     }
 });
