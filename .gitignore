@@ -53,7 +53,7 @@ web_modules/
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/
-.rts2_cache_umd/
+.r_ts2_cache_umd/
 
 # Optional REPL history
 .node_repl_history
@@ -106,5 +106,8 @@ public
 .vscode/
 
 # Custom project ignores
-config/
 scripts/
+
+# Ignore sensitive config files, but NOT example templates
+config/*.json
+!config/*.example.json

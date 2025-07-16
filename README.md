@@ -5,7 +5,7 @@ This project allows you to host your own bot on your discord server, and receive
 It's a feature that is truly missed in the Vinted app, you will never miss a good deal again!
 
 > [!WARNING]
->  Vinted uses Cloudflare to protect its API from scraping. A single IP is only allowed a limited number of calls before being blocked for 24h. If you want to have this bot running 24/7 you should consider adding rotating proxies.
+> Vinted uses Cloudflare to protect its API from scraping. A single IP is only allowed a limited number of calls before being blocked for 24h. If you want to have this bot running 24/7 you should consider adding rotating proxies.
 
 Functionalities:
 ----------------
@@ -39,6 +39,7 @@ Step 2: Install dependencies
 ----------------------------
 
 If you want to use autobuy you will need to clone this branch, then add your session tokens to `autobuy.json`. You will also need to add your home address latitude and longitude for the automatic selection of the pickup point. Google your User Agent and paste it in the config too.
+
 ```
 {
   "user_agent": "Mozilla....",
@@ -48,6 +49,40 @@ If you want to use autobuy you will need to clone this branch, then add your ses
   "longitude":1.1313
 }
 ```
+
 You need to get the tokens from your browser storage, AFTER having logged-in with the account you want to use for your purchases
 
 Don't hesitate to contact me on discord (@thewwk) or open an issue here if you have any concerns or requests!
+
+Step 3: Configure the bot
+-------------------------
+
+This project uses configuration files for tokens, cookies, and search channels. Template files are provided.
+
+1. **Set up your environment variables:** Create a copy of `.env.example` and rename it to `.env`. Open the new `.env` file and add your Discord Bot Token.
+
+   ```bash
+   # For Linux/macOS
+   cp .env.example .env
+
+   # For Windows
+   copy .env.example .env
+   ```
+2. **Set up your Vinted cookies:** Create a copy of `config/cookies.example.json` and rename it to `config/cookies.json`. Open the new file and add your Vinted `access` and `refresh` tokens.
+
+   ```bash
+   # For Linux/macOS
+   cp config/cookies.example.json config/cookies.json
+
+   # For Windows
+   copy config/cookies.example.json config/cookies.json
+   ```
+3. **Set up your search channels:** Create a copy of `config/channels.example.json` and rename it to `config/channels.json`. Open the new file and add your search URLs and channel IDs.
+
+   ```bash
+   # For Linux/macOS
+   cp config/channels.example.json config/channels.json
+
+   # For Windows
+   copy config/channels.example.json config/channels.json
+   ```
