@@ -54,7 +54,7 @@ export const execute = async (interaction) => {
 
     const url = interaction.options.getString('url');
     const banned_keywords = interaction.options.getString('banned_keywords') ? interaction.options.getString('banned_keywords').split(',').map(keyword => keyword.trim()) : [];
-    const frequency = interaction.options.getString('frequency') || 10;
+    let frequency = interaction.options.getString('frequency') || '10'; // Get as string for parsing
     const name = interaction.options.getString('name');
     const channel_id = interaction.channel.id;
 
@@ -64,6 +64,14 @@ export const execute = async (interaction) => {
         await interaction.followUp({ content: validation});
         return;
     }
+
+    // New: Validate the frequency
+    const frequencyNum = parseInt(frequency, 10);
+    if (isNaN(frequencyNum) || frequencyNum < 5) {
+        await interaction.followUp({ content: 'The frequency must be a number and at least 5 seconds.'});
+        return;
+    }
+
 
     try {
         //register the search into the json file
@@ -78,7 +86,7 @@ export const execute = async (interaction) => {
             "channelId": channel_id,
             "channelName": name,
             "url": url,
-            "frequency": frequency,
+            "frequency": frequencyNum, // Use the validated number
             "titleBlacklist": banned_keywords
         };
         searches.push(search);
